@@ -1,5 +1,3 @@
-package com.anti_captcha;
-
 import com.anti_captcha.Api.CustomCaptcha;
 import com.anti_captcha.Api.FunCaptcha;
 import com.anti_captcha.Api.GeeTestProxyless;
@@ -14,28 +12,17 @@ import com.anti_captcha.Helper.DebugHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Main {
+public class AntiCaptchaTest {
 
-    public static void main(String[] args) throws InterruptedException, MalformedURLException, JSONException {
-        exampleGetBalance();
-        exampleImageToText();
-        exampleSquare();
-        exampleNoCaptchaProxyless();
-        exampleRecaptchaV3Proxyless();
-        exampleNoCaptcha();
-        exampleCustomCaptcha();
-        exampleFuncaptcha();
-        exampleGeeTestProxyless();
-        exampleHCaptchaProxyless();
-    }
-
-    private static void exampleGeeTestProxyless() throws MalformedURLException, InterruptedException {
+    @Test
+    public void exampleGeeTestProxyless() throws MalformedURLException, InterruptedException {
         DebugHelper.setVerboseMode(true);
 
         GeeTestProxyless api = new GeeTestProxyless();
@@ -60,7 +47,8 @@ public class Main {
         }
     }
 
-    private static void exampleImageToText() throws InterruptedException {
+    @Test
+    public void exampleImageToText() throws InterruptedException {
         DebugHelper.setVerboseMode(true);
 
         ImageToText api = new ImageToText();
@@ -79,7 +67,8 @@ public class Main {
         }
     }
 
-    private static void exampleSquare() throws InterruptedException {
+    @Test
+    public void exampleSquare() throws InterruptedException {
         DebugHelper.setVerboseMode(true);
 
         SquareCaptcha api = new SquareCaptcha();
@@ -101,7 +90,8 @@ public class Main {
         }
     }
 
-    private static void exampleNoCaptchaProxyless() throws MalformedURLException, InterruptedException {
+    @Test
+    public void exampleNoCaptchaProxyless() throws MalformedURLException, InterruptedException {
         DebugHelper.setVerboseMode(true);
 
         NoCaptchaProxyless api = new NoCaptchaProxyless();
@@ -121,7 +111,8 @@ public class Main {
         }
     }
 
-    private static void exampleHCaptchaProxyless() throws MalformedURLException, InterruptedException {
+    @Test
+    public void exampleHCaptchaProxyless() throws MalformedURLException, InterruptedException {
         DebugHelper.setVerboseMode(true);
 
         HCaptchaProxyless api = new HCaptchaProxyless();
@@ -141,7 +132,8 @@ public class Main {
         }
     }
 
-    private static void exampleRecaptchaV3Proxyless() throws MalformedURLException, InterruptedException {
+    @Test
+    public void exampleRecaptchaV3Proxyless() throws MalformedURLException, InterruptedException {
         DebugHelper.setVerboseMode(true);
 
         RecaptchaV3Proxyless api = new RecaptchaV3Proxyless();
@@ -162,7 +154,8 @@ public class Main {
         }
     }
 
-    private static void exampleNoCaptcha() throws MalformedURLException, InterruptedException {
+    @Test
+    public void exampleNoCaptcha() throws MalformedURLException, InterruptedException {
         DebugHelper.setVerboseMode(true);
 
         NoCaptcha api = new NoCaptcha();
@@ -191,7 +184,8 @@ public class Main {
         }
     }
 
-    private static void exampleGetBalance() {
+    @Test
+    public void exampleGetBalance() {
         DebugHelper.setVerboseMode(true);
 
         ImageToText api = new ImageToText();
@@ -206,7 +200,8 @@ public class Main {
         }
     }
 
-    private static void exampleCustomCaptcha() throws JSONException, InterruptedException {
+    @Test
+    public void exampleCustomCaptcha() throws JSONException, InterruptedException {
         DebugHelper.setVerboseMode(true);
         int randInt = ThreadLocalRandom.current().nextInt(0, 10000);
 
@@ -289,7 +284,8 @@ public class Main {
         }
     }
 
-    private static void exampleFuncaptcha() throws MalformedURLException, InterruptedException {
+    @Test
+    public void exampleFuncaptcha() throws MalformedURLException, InterruptedException {
         DebugHelper.setVerboseMode(true);
 
         FunCaptcha api = new FunCaptcha();
