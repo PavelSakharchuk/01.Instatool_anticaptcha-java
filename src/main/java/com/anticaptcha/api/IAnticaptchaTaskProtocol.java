@@ -1,7 +1,6 @@
-package com.anti_captcha;
+package com.anticaptcha.api;
 
-import com.anti_captcha.ApiResponse.TaskResultResponse;
-
+import com.anticaptcha.apiresponse.TaskResultResponse;
 import org.json.JSONObject;
 
 public interface IAnticaptchaTaskProtocol {

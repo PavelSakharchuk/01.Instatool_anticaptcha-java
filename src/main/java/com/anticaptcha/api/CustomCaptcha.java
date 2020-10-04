@@ -1,15 +1,12 @@
-package com.anti_captcha.Api;
+package com.anticaptcha.api;
 
-import com.anti_captcha.AnticaptchaBase;
-import com.anti_captcha.ApiResponse.TaskResultResponse;
-import com.anti_captcha.Helper.DebugHelper;
-import com.anti_captcha.IAnticaptchaTaskProtocol;
-
+import com.anticaptcha.apiresponse.TaskResultResponse;
+import com.anticaptcha.helper.DebugHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class CustomCaptcha extends AnticaptchaBase implements IAnticaptchaTaskProtocol {
+public class CustomCaptcha extends AnticaptchaAbstract implements IAnticaptchaTaskProtocol {
     private String imageUrl;
     private String assignment;
     private JSONArray forms;

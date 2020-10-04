@@ -1,31 +1,32 @@
-package com.anti_captcha.ApiResponse;
+package com.anticaptcha.apiresponse;
 
-import com.anti_captcha.Helper.DebugHelper;
-import com.anti_captcha.Helper.JsonHelper;
-
+import com.anticaptcha.helper.DebugHelper;
+import com.anticaptcha.helper.JsonHelper;
 import org.json.JSONObject;
 
-public class BalanceResponse {
+public class CreateTaskResponse {
     private Integer errorId;
     private String errorCode;
     private String errorDescription;
-    private Double balance;
+    private Integer taskId;
 
-    public BalanceResponse(JSONObject json) {
+    public CreateTaskResponse(JSONObject json) {
         errorId = JsonHelper.extractInt(json, "errorId");
 
         if (errorId != null) {
             if (errorId.equals(0)) {
-                balance = JsonHelper.extractDouble(json, "balance");
+                taskId = JsonHelper.extractInt(json, "taskId");
             } else {
                 errorCode = JsonHelper.extractStr(json, "errorCode");
                 errorDescription = JsonHelper.extractStr(json, "errorDescription");
             }
-        }
-        else
-        {
+        } else {
             DebugHelper.out("Unknown error", DebugHelper.Type.ERROR);
         }
+    }
+
+    public Integer getErrorId() {
+        return errorId;
     }
 
     public String getErrorCode() {
@@ -36,11 +37,7 @@ public class BalanceResponse {
         return errorDescription == null ? "(no error description)" : errorDescription;
     }
 
-    public Double getBalance() {
-        return balance;
-    }
-
-    public Integer getErrorId() {
-        return errorId;
+    public Integer getTaskId() {
+        return taskId;
     }
 }

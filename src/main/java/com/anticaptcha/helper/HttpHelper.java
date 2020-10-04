@@ -1,8 +1,7 @@
-package com.anti_captcha.Helper;
+package com.anticaptcha.helper;
 
-import com.anti_captcha.Http.HttpRequest;
-import com.anti_captcha.Http.HttpResponse;
-
+import com.anticaptcha.http.HttpRequest;
+import com.anticaptcha.http.HttpResponse;
 import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -19,6 +18,10 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.impl.cookie.BasicClientCookie;
 
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,11 +32,6 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Map;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 public class HttpHelper {
 

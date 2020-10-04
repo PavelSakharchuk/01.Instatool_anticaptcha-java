@@ -1,22 +1,21 @@
-package com.anti_captcha.Api;
+package com.anticaptcha.api;
 
-import com.anti_captcha.Helper.DebugHelper;
-
+import com.anticaptcha.apiresponse.TaskResultResponse;
+import com.anticaptcha.helper.DebugHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NoCaptcha extends NoCaptchaProxyless {
-    private String cookies;
+import java.net.URL;
+
+public class FunCaptcha extends AnticaptchaAbstract implements IAnticaptchaTaskProtocol {
     private String proxyLogin;
     private String proxyPassword;
     private Integer proxyPort;
     private ProxyTypeOption proxyType;
     private String userAgent;
     private String proxyAddress;
-
-    public void setCookies(String cookies) {
-        this.cookies = cookies;
-    }
+    private URL websiteUrl;
+    private String websitePublicKey;
 
     public void setProxyLogin(String proxyLogin) {
         this.proxyLogin = proxyLogin;
@@ -44,7 +43,7 @@ public class NoCaptcha extends NoCaptchaProxyless {
 
     @Override
     public JSONObject getPostData() {
-        JSONObject postData = super.getPostData();
+        JSONObject postData = new JSONObject();
 
         if (proxyType == null || proxyPort == null || proxyPort < 1 || proxyPort > 65535
                 || proxyAddress == null || proxyAddress.length() == 0) {
@@ -54,14 +53,15 @@ public class NoCaptcha extends NoCaptchaProxyless {
         }
 
         try {
-            postData.put("type", "NoCaptchaTask");
+            postData.put("type", "FunCaptchaTask");
+            postData.put("websiteURL", websiteUrl);
+            postData.put("websitePublicKey", websitePublicKey);
             postData.put("proxyType", proxyType.toString().toLowerCase());
             postData.put("proxyAddress", proxyAddress);
             postData.put("proxyPort", proxyPort);
             postData.put("proxyLogin", proxyLogin);
             postData.put("proxyPassword", proxyPassword);
             postData.put("userAgent", userAgent);
-            postData.put("cookies", cookies);
         } catch (JSONException e) {
             DebugHelper.out("JSON compilation error: " + e.getMessage(), DebugHelper.Type.ERROR);
 
@@ -69,5 +69,18 @@ public class NoCaptcha extends NoCaptchaProxyless {
         }
 
         return postData;
+    }
+
+    @Override
+    public TaskResultResponse.SolutionData getTaskSolution() {
+        return taskInfo.getSolution();
+    }
+
+    public void setWebsiteUrl(URL websiteUrl) {
+        this.websiteUrl = websiteUrl;
+    }
+
+    public void setWebsitePublicKey(String websitePublicKey) {
+        this.websitePublicKey = websitePublicKey;
     }
 }

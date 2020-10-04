@@ -1,8 +1,9 @@
-package com.anti_captcha.Http;
+package com.anticaptcha.http;
 
+import org.apache.http.Header;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.Header;
+
 import java.util.HashMap;
 import java.util.Map;
 

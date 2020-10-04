@@ -3,9 +3,6 @@ version '0.0.1'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }
@@ -24,6 +21,13 @@ dependencies {
     // JUnit5
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.0'
+
+    // Properties-loader: https://mvnrepository.com/artifact/ru.yandex.qatools.properties/properties-loader
+    compile group: 'ru.yandex.qatools.properties', name: 'properties-loader', version: '1.6'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
 
 test {

@@ -1,20 +1,19 @@
-package com.anti_captcha;
+package com.anticaptcha.api;
 
-import com.anti_captcha.ApiResponse.BalanceResponse;
-import com.anti_captcha.ApiResponse.CreateTaskResponse;
-import com.anti_captcha.ApiResponse.TaskResultResponse;
-import com.anti_captcha.Helper.DebugHelper;
-import com.anti_captcha.Helper.HttpHelper;
-import com.anti_captcha.Helper.JsonHelper;
-import com.anti_captcha.Helper.StringHelper;
-import com.anti_captcha.Http.HttpRequest;
-
+import com.anticaptcha.apiresponse.BalanceResponse;
+import com.anticaptcha.apiresponse.CreateTaskResponse;
+import com.anticaptcha.apiresponse.TaskResultResponse;
+import com.anticaptcha.helper.DebugHelper;
+import com.anticaptcha.helper.HttpHelper;
+import com.anticaptcha.helper.JsonHelper;
+import com.anticaptcha.helper.StringHelper;
+import com.anticaptcha.http.HttpRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
 
-public abstract class AnticaptchaBase {
+public abstract class AnticaptchaAbstract {
     protected TaskResultResponse taskInfo;
     private String host = "api.anti-captcha.com";
     private SchemeType scheme = SchemeType.HTTPS;

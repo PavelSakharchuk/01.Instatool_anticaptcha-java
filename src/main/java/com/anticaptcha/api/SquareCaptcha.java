@@ -1,17 +1,14 @@
-package com.anti_captcha.Api;
+package com.anticaptcha.api;
 
-import com.anti_captcha.AnticaptchaBase;
-import com.anti_captcha.ApiResponse.TaskResultResponse;
-import com.anti_captcha.Helper.DebugHelper;
-import com.anti_captcha.Helper.StringHelper;
-import com.anti_captcha.IAnticaptchaTaskProtocol;
-
+import com.anticaptcha.apiresponse.TaskResultResponse;
+import com.anticaptcha.helper.DebugHelper;
+import com.anticaptcha.helper.StringHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 
-public class SquareCaptcha extends AnticaptchaBase implements IAnticaptchaTaskProtocol {
+public class SquareCaptcha extends AnticaptchaAbstract implements IAnticaptchaTaskProtocol {
     private String bodyBase64;
     private String objectName = "";
     private int rowsCount = 3;

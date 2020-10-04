@@ -1,9 +1,8 @@
-package com.anti_captcha.Helper;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
+package com.anticaptcha.helper;
 
 import javax.xml.bind.DatatypeConverter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class StringHelper {
     public static String toCamelCase(String s) {

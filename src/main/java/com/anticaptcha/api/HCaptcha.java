@@ -1,15 +1,12 @@
-package com.anti_captcha.Api;
+package com.anticaptcha.api;
 
-import com.anti_captcha.AnticaptchaBase;
-import com.anti_captcha.ApiResponse.TaskResultResponse;
-import com.anti_captcha.Helper.DebugHelper;
-import com.anti_captcha.IAnticaptchaTaskProtocol;
-
+import com.anticaptcha.apiresponse.TaskResultResponse;
+import com.anticaptcha.helper.DebugHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HCaptcha extends HCaptchaProxyless implements IAnticaptchaTaskProtocol {
-    private AnticaptchaBase.ProxyTypeOption proxyType = AnticaptchaBase.ProxyTypeOption.HTTP;
+    private AnticaptchaAbstract.ProxyTypeOption proxyType = AnticaptchaAbstract.ProxyTypeOption.HTTP;
     private String proxyAddress;
     private Integer proxyPort;
     private String proxyLogin;
@@ -42,7 +39,7 @@ public class HCaptcha extends HCaptchaProxyless implements IAnticaptchaTaskProto
     }
 
     @SuppressWarnings("unused")
-    public void setProxyType(AnticaptchaBase.ProxyTypeOption proxyType) {
+    public void setProxyType(AnticaptchaAbstract.ProxyTypeOption proxyType) {
         this.proxyType = proxyType;
     }
 

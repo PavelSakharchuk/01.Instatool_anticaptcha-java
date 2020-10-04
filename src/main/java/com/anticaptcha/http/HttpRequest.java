@@ -1,4 +1,4 @@
-package com.anti_captcha.Http;
+package com.anticaptcha.http;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
