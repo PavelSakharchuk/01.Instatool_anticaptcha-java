@@ -1,6 +1,8 @@
 package com.anticaptcha;
 
 import com.anticaptcha.api.GeeTestProxyless;
+import com.anticaptcha.api.ImageToText;
+import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 
 import java.net.URL;
@@ -11,7 +13,7 @@ public class AnticaptchaTask {
     private AnticaptchaTask() {
     }
 
-    public static String solveByProxyless(URL url, String websiteKey, String websiteChallenge) throws InterruptedException {
+    public static TaskResultResponse.SolutionData solveByProxyless(URL url, String websiteKey, String websiteChallenge) throws InterruptedException {
         DebugHelper.setVerboseMode(true);
 
         GeeTestProxyless api = new GeeTestProxyless();
@@ -34,6 +36,26 @@ public class AnticaptchaTask {
             DebugHelper.out("Result SECCODE: " + api.getTaskSolution().getSeccode(), DebugHelper.Type.SUCCESS);
             DebugHelper.out("Result VALIDATE: " + api.getTaskSolution().getValidate(), DebugHelper.Type.SUCCESS);
         }
-        return null;
+        return api.getTaskSolution();
+    }
+
+    public static String solveImageToText(String filePath) throws InterruptedException {
+        DebugHelper.setVerboseMode(true);
+
+        ImageToText api = new ImageToText();
+        api.setClientKey(anticaptchaKey);
+        api.setFilePath(filePath);
+
+        if (!api.createTask()) {
+            DebugHelper.out(
+                    "API v2 send failed. " + api.getErrorMessage(),
+                    DebugHelper.Type.ERROR
+            );
+        } else if (!api.waitForResult()) {
+            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
+        } else {
+            DebugHelper.out("Result: " + api.getTaskSolution().getText(), DebugHelper.Type.SUCCESS);
+        }
+        return api.getTaskSolution().getText();
     }
 }
