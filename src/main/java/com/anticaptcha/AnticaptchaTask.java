@@ -2,13 +2,16 @@ package com.anticaptcha;
 
 import com.anticaptcha.api.GeeTestProxyless;
 import com.anticaptcha.api.ImageToText;
+import com.anticaptcha.api.SquareCaptcha;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 
 import java.net.URL;
+import java.util.List;
 
 public class AnticaptchaTask {
-    private static String anticaptchaKey = Config.INSTANCE.getKey();
+    private static final String ANTICAPTCHA_KEY = Config.INSTANCE.getKey();
+
 
     private AnticaptchaTask() {
     }
@@ -17,7 +20,7 @@ public class AnticaptchaTask {
         DebugHelper.setVerboseMode(true);
 
         GeeTestProxyless api = new GeeTestProxyless();
-        api.setClientKey(anticaptchaKey);
+        api.setClientKey(ANTICAPTCHA_KEY);
         api.setWebsiteUrl(url);
         api.setWebsiteKey(websiteKey);
         // "challenge" for testing you can get here: https://www.binance.com/security/getGtCode.html?t=1561554068768
@@ -39,12 +42,12 @@ public class AnticaptchaTask {
         return api.getTaskSolution();
     }
 
-    public static String solveImageToText(String filePath) throws InterruptedException {
+    public static String solveImageToText(String captchaImageFilePath) throws InterruptedException {
         DebugHelper.setVerboseMode(true);
 
         ImageToText api = new ImageToText();
-        api.setClientKey(anticaptchaKey);
-        api.setFilePath(filePath);
+        api.setClientKey(ANTICAPTCHA_KEY);
+        api.setFilePath(captchaImageFilePath);
 
         if (!api.createTask()) {
             DebugHelper.out(
@@ -57,5 +60,28 @@ public class AnticaptchaTask {
             DebugHelper.out("Result: " + api.getTaskSolution().getText(), DebugHelper.Type.SUCCESS);
         }
         return api.getTaskSolution().getText();
+    }
+
+    public static List<Integer> solveSquare(String filePath, String objectName, int columns, int rows) throws InterruptedException {
+        DebugHelper.setVerboseMode(true);
+
+        SquareCaptcha api = new SquareCaptcha();
+        api.setClientKey(ANTICAPTCHA_KEY);
+        api.setFilePath(filePath);
+        api.setObjectName(objectName);
+        api.setColumnsCount(columns);
+        api.setRowsCount(rows);
+
+        if (!api.createTask()) {
+            DebugHelper.out(
+                    "API v2 send failed. " + api.getErrorMessage(),
+                    DebugHelper.Type.ERROR
+            );
+        } else if (!api.waitForResult()) {
+            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
+        } else {
+            DebugHelper.out("Result: " + api.getTaskSolution().getCellNumbers(), DebugHelper.Type.SUCCESS);
+        }
+        return api.getTaskSolution().getCellNumbers();
     }
 }

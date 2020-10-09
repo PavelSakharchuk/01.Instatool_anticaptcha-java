@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 class AntiCaptchaTaskTest {
 
@@ -22,10 +24,27 @@ class AntiCaptchaTaskTest {
     @Test
     void imageToTextTest() throws InterruptedException {
         String captchaImagePath = "captcha.jpg";
+        String expectedCaptchaResult = "abournes";
 
         String captcha = AnticaptchaTask.solveImageToText(captchaImagePath);
 
-        Assertions.assertEquals("abournes", captcha);
+        Assertions.assertEquals(expectedCaptchaResult, captcha);
+    }
+
+    @Test
+    void squareTest() throws InterruptedException {
+        String filePath = "square.jpg";
+        String objectName = "FISH / РЫБА";
+        int columns = 4;
+        int rows = 4;
+
+        List<Integer> expectedCaptchaResult = Arrays.asList(3, 4, 5, 8, 13);
+
+        List<Integer> answerList = AnticaptchaTask.solveSquare(filePath, objectName, columns, rows);
+
+        Assertions.assertTrue(answerList.containsAll(expectedCaptchaResult)
+                        && answerList.size() == expectedCaptchaResult.size(),
+                String.format("Solve is not expected.%nExpected: %s%nActual: %s", expectedCaptchaResult, answerList));
     }
 
 }
