@@ -56,19 +56,17 @@ public class SquareCaptcha extends AnticaptchaAbstract implements IAnticaptchaTa
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public boolean setFilePath(String filename) {
-        File f = new File(filename);
-
-        if (f.exists() && !f.isDirectory()) {
-            if (f.length() > 100) {
-                bodyBase64 = StringHelper.imageFileToBase64String(filename);
+    public boolean setFile(File file) {
+        if (file.exists() && !file.isDirectory()) {
+            if (file.length() > 100) {
+                bodyBase64 = StringHelper.imageFileToBase64String(file);
 
                 return true;
             } else {
-                DebugHelper.out("file " + filename + " is too small or empty", DebugHelper.Type.ERROR);
+                DebugHelper.out("file " + file.getPath() + " is too small or empty", DebugHelper.Type.ERROR);
             }
         } else {
-            DebugHelper.out("file " + filename + " not found", DebugHelper.Type.ERROR);
+            DebugHelper.out("file " + file.getPath() + " not found", DebugHelper.Type.ERROR);
         }
 
         return false;

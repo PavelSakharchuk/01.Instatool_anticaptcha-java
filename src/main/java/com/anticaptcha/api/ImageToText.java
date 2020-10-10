@@ -47,13 +47,11 @@ public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTask
         ANY_LETTERS_EXCEPT_NUMBERS
     }
 
-    public void setFilePath(String filePath) {
-        File f = new File(filePath);
-
-        if (!f.exists() || f.isDirectory()) {
-            DebugHelper.out("File " + filePath + " not found", DebugHelper.Type.ERROR);
+    public void setFile(File file) {
+        if (!file.exists() || file.isDirectory()) {
+            DebugHelper.out("File " + file.getPath() + " not found", DebugHelper.Type.ERROR);
         } else {
-            bodyBase64 = StringHelper.imageFileToBase64String(filePath);
+            bodyBase64 = StringHelper.imageFileToBase64String(file);
 
             if (bodyBase64 == null) {
                 DebugHelper.out(

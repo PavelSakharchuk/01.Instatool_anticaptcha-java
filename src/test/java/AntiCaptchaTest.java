@@ -8,12 +8,14 @@ import com.anticaptcha.api.NoCaptchaProxyless;
 import com.anticaptcha.api.RecaptchaV3Proxyless;
 import com.anticaptcha.api.SquareCaptcha;
 import com.anticaptcha.helper.DebugHelper;
+import com.anticaptcha.helper.FileHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.concurrent.ThreadLocalRandom;
@@ -47,12 +49,12 @@ class AntiCaptchaTest {
     }
 
     @Test
-    void exampleImageToText() throws InterruptedException {
+    void exampleImageToText() throws InterruptedException, URISyntaxException {
         DebugHelper.setVerboseMode(true);
 
         ImageToText api = new ImageToText();
         api.setClientKey("1234567890123456789012");
-        api.setFilePath("captcha.jpg");
+        api.setFile(FileHelper.getFileFromResource("captcha.jpg"));
 
         if (!api.createTask()) {
             DebugHelper.out(
@@ -67,12 +69,12 @@ class AntiCaptchaTest {
     }
 
     @Test
-    void exampleSquare() throws InterruptedException {
+    void exampleSquare() throws InterruptedException, URISyntaxException {
         DebugHelper.setVerboseMode(true);
 
         SquareCaptcha api = new SquareCaptcha();
         api.setClientKey("1234567890123456789012");
-        api.setFilePath("square.jpg");
+        api.setFile(FileHelper.getFileFromResource("square.jpg"));
         api.setObjectName("FISH / РЫБА");
         api.setColumnsCount(4);
         api.setRowsCount(4);

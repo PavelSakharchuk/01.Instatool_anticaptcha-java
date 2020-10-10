@@ -6,6 +6,7 @@ import com.anticaptcha.api.SquareCaptcha;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 
@@ -42,12 +43,12 @@ public class AnticaptchaTask {
         return api.getTaskSolution();
     }
 
-    public static String solveImageToText(String captchaImageFilePath) throws InterruptedException {
+    public static String solveImageToText(File captchaImageFile) throws InterruptedException {
         DebugHelper.setVerboseMode(true);
 
         ImageToText api = new ImageToText();
         api.setClientKey(ANTICAPTCHA_KEY);
-        api.setFilePath(captchaImageFilePath);
+        api.setFile(captchaImageFile);
 
         if (!api.createTask()) {
             DebugHelper.out(
@@ -62,12 +63,12 @@ public class AnticaptchaTask {
         return api.getTaskSolution().getText();
     }
 
-    public static List<Integer> solveSquare(String filePath, String objectName, int columns, int rows) throws InterruptedException {
+    public static List<Integer> solveSquare(File squareFile, String objectName, int columns, int rows) throws InterruptedException {
         DebugHelper.setVerboseMode(true);
 
         SquareCaptcha api = new SquareCaptcha();
         api.setClientKey(ANTICAPTCHA_KEY);
-        api.setFilePath(filePath);
+        api.setFile(squareFile);
         api.setObjectName(objectName);
         api.setColumnsCount(columns);
         api.setRowsCount(rows);
