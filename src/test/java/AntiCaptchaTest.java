@@ -20,6 +20,11 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * @deprecated Old version.
+ * Replaced by {@link AntiCaptchaTaskTest}
+ */
+@Deprecated
 class AntiCaptchaTest {
 
     @Test
