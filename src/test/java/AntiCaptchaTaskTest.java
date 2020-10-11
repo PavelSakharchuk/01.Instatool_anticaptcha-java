@@ -44,18 +44,7 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void geeTestProxylessTest() throws InterruptedException, MalformedURLException {
-        URL websiteUrl = new URL("https://auth.geetest.com/");
-        String websiteKey = "b6e21f90a91a3c2d4a31fe84e10d0442";
-        String websiteChallenge = "cd0b3b5c33fb951ab364d9e13ccd7bf8";
-
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveByProxyless(websiteUrl, websiteKey, websiteChallenge);
-
-        Assertions.assertNotNull(solution.getGRecaptchaResponse());
-    }
-
-    @Test
-    void squareTest() throws InterruptedException, URISyntaxException {
+    void squareNetTest() throws InterruptedException, URISyntaxException {
         File squareFile = FileHelper.getFileFromResource("square.jpg");
         String objectName = "FISH / РЫБА";
         int columns = 4;
@@ -63,11 +52,31 @@ class AntiCaptchaTaskTest {
 
         List<Integer> expectedCaptchaResult = Arrays.asList(2);
 
-        List<Integer> answerList = AnticaptchaTask.solveSquare(squareFile, objectName, columns, rows);
+        List<Integer> answerList = AnticaptchaTask.solveSquareNet(squareFile, objectName, columns, rows);
 
         Assertions.assertTrue(answerList.containsAll(expectedCaptchaResult)
                         && answerList.size() == expectedCaptchaResult.size(),
                 String.format("Solve is not expected.%nExpected: %s%nActual: %s", expectedCaptchaResult, answerList));
     }
 
+    @Test
+    void geeTestProxylessTest() throws InterruptedException, MalformedURLException {
+        URL websiteUrl = new URL("https://auth.geetest.com/");
+        String websiteKey = "b6e21f90a91a3c2d4a31fe84e10d0442";
+        String websiteChallenge = "cd0b3b5c33fb951ab364d9e13ccd7bf8";
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveGeeTestProxyless(websiteUrl, websiteKey, websiteChallenge);
+
+        Assertions.assertNotNull(solution.getGRecaptchaResponse());
+    }
+
+    @Test
+    void hCaptchaProxylessTest() throws InterruptedException, MalformedURLException {
+        URL websiteUrl = new URL("http://democaptcha.com/");
+        String websiteKey = "51829642-2cda-4b09-896c-594f89d700cc";
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveHCaptchaProxyless(websiteUrl, websiteKey);
+
+        Assertions.assertNotNull(solution.getGRecaptchaResponse());
+    }
 }

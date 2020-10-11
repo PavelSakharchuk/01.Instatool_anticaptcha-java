@@ -2,6 +2,7 @@ package com.anticaptcha;
 
 import com.anticaptcha.api.AnticaptchaAbstract;
 import com.anticaptcha.api.GeeTestProxyless;
+import com.anticaptcha.api.HCaptchaProxyless;
 import com.anticaptcha.api.ImageToText;
 import com.anticaptcha.api.NoCaptchaProxyless;
 import com.anticaptcha.api.SquareCaptcha;
@@ -56,9 +57,12 @@ public class AnticaptchaTask {
      * As may you know, number of daily Recaptcha solutions is limited for each IP address
      * and we'll have to deal with proxies ourselves.
      *
+     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/9666606/NoCaptchaTaskProxyless+Google+Recaptcha+puzzle+solving+without+proxies">https://anticaptcha.atlassian.net</a>
+     *
      * @param website    Address of target web page
      * @param websiteKey Recaptcha website key
-     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/9666606/NoCaptchaTaskProxyless+Google+Recaptcha+puzzle+solving+without+proxies">https://anticaptcha.atlassian.net</a>
+     *
+     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
      */
     public static TaskResultResponse.SolutionData solveNoCaptchaProxyless(URL website, String websiteKey) throws InterruptedException {
         NoCaptchaProxyless api = new NoCaptchaProxyless();
@@ -79,7 +83,55 @@ public class AnticaptchaTask {
         return api.getTaskSolution();
     }
 
-    public static TaskResultResponse.SolutionData solveByProxyless(URL website, String websiteKey, String websiteChallenge) throws InterruptedException {
+    /**
+     * <h2>SquareNetTextTask : select objects on image with an overlay grid</h2>
+     * <p>
+     * This type of tasks takes your image, adds custom grid on it
+     * and asks our worker to mark specified objects on it.
+     *
+     * @param squareFile File image captcha
+     * @param objectName Name of the object. Example: banana
+     * @param columns    Number of grid columns. Min 2, max 5
+     * @param rows       Number of grid rows. Min 2, max 5
+     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
+     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/410517505/SquareNetTextTask+select+objects+on+image+with+an+overlay+grid">https://anticaptcha.atlassian.net</a>
+     */
+    public static List<Integer> solveSquareNet(File squareFile, String objectName, int columns, int rows) throws InterruptedException {
+        SquareCaptcha api = new SquareCaptcha();
+        api.setClientKey(ANTICAPTCHA_KEY);
+        api.setFile(squareFile);
+        api.setObjectName(objectName);
+        api.setColumnsCount(columns);
+        api.setRowsCount(rows);
+
+        if (!api.createTask()) {
+            DebugHelper.out(
+                    "API v2 send failed. " + api.getErrorMessage(),
+                    DebugHelper.Type.ERROR
+            );
+        } else if (!api.waitForResult()) {
+            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
+        } else {
+            DebugHelper.out("Result: " + api.getTaskSolution().getCellNumbers(), DebugHelper.Type.SUCCESS);
+        }
+        return api.getTaskSolution().getCellNumbers();
+    }
+
+    /**
+     * <h2>GeeTestTaskProxyless - captcha from geetest.com without proxy</h2>
+     * <p>
+     * This type of task solves GeeTest captcha in our workers browsers.
+     * Your app submits website address, gt key, challenge key and receives 3 parameters after task completion.
+     *
+     * @param website          Address of target web page
+     * @param websiteKey       The domain key
+     * @param websiteChallenge Changing token key.
+     *                         Make sure to grab fresh one for each captcha,
+     *                         otherwise you will be charged for error task.
+     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
+     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/416972814/GeeTestTaskProxyless+-+captcha+from+geetest.com+without+proxy">https://anticaptcha.atlassian.net</a>
+     */
+    public static TaskResultResponse.SolutionData solveGeeTestProxyless(URL website, String websiteKey, String websiteChallenge) throws InterruptedException {
         GeeTestProxyless api = new GeeTestProxyless();
         api.setClientKey(ANTICAPTCHA_KEY);
         api.setWebsiteUrl(website);
@@ -103,13 +155,25 @@ public class AnticaptchaTask {
         return api.getTaskSolution();
     }
 
-    public static List<Integer> solveSquare(File squareFile, String objectName, int columns, int rows) throws InterruptedException {
-        SquareCaptcha api = new SquareCaptcha();
+    /**
+     * <h2>HCaptchaTaskProxyless : hCaptcha puzzle solving without proxy</h2>
+     * <p>
+     * hCaptcha devs call their captcha "a drop-in replacement for Recaptcha".
+     * We tried to create same thing in our API,
+     * so task properties are absolutely the same except type.
+     *
+     * @param website    Address of target web page
+     * @param websiteKey The domain key
+     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
+     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/834502676/HCaptchaTaskProxyless+hCaptcha+puzzle+solving+without+proxy">https://anticaptcha.atlassian.net</a>
+     */
+    public static TaskResultResponse.SolutionData solveHCaptchaProxyless(URL website, String websiteKey) throws InterruptedException {
+        DebugHelper.setVerboseMode(true);
+
+        HCaptchaProxyless api = new HCaptchaProxyless();
         api.setClientKey(ANTICAPTCHA_KEY);
-        api.setFile(squareFile);
-        api.setObjectName(objectName);
-        api.setColumnsCount(columns);
-        api.setRowsCount(rows);
+        api.setWebsiteUrl(website);
+        api.setWebsiteKey(websiteKey);
 
         if (!api.createTask()) {
             DebugHelper.out(
@@ -119,8 +183,8 @@ public class AnticaptchaTask {
         } else if (!api.waitForResult()) {
             DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
         } else {
-            DebugHelper.out("Result: " + api.getTaskSolution().getCellNumbers(), DebugHelper.Type.SUCCESS);
+            DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
         }
-        return api.getTaskSolution().getCellNumbers();
+        return api.getTaskSolution();
     }
 }
