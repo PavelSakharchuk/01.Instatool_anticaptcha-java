@@ -44,6 +44,18 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
+    void recaptchaV3ProxylessTest() throws InterruptedException, MalformedURLException {
+        URL websiteUrl = new URL("http://http.myjino.ru/recaptcha/test-get.php");
+        String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
+        String pageAction = "testPageAction";
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveRecaptchaV3Proxyless(websiteUrl, websiteKey, pageAction);
+
+        Assertions.assertNotNull(solution);
+        Assertions.assertNotNull(solution.getGRecaptchaResponse());
+    }
+
+    @Test
     void squareNetTest() throws InterruptedException, URISyntaxException {
         File squareFile = FileHelper.getFileFromResource("square.jpg");
         String objectName = "FISH / РЫБА";

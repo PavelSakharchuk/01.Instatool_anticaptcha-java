@@ -5,6 +5,7 @@ import com.anticaptcha.api.GeeTestProxyless;
 import com.anticaptcha.api.HCaptchaProxyless;
 import com.anticaptcha.api.ImageToText;
 import com.anticaptcha.api.NoCaptchaProxyless;
+import com.anticaptcha.api.RecaptchaV3Proxyless;
 import com.anticaptcha.api.SquareCaptcha;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
@@ -25,7 +26,7 @@ public class AnticaptchaTask {
      * <h2>ImageToTextTask : solve usual image captcha</h2>
      *
      * @param captchaImageFile File image captcha
-     * @return Captcha answer
+     * @return Solution
      * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
      * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/5079091/ImageToTextTask+solve+usual+image+captcha">https://anticaptcha.atlassian.net</a>
      */
@@ -62,6 +63,8 @@ public class AnticaptchaTask {
      * @param website    Address of target web page
      * @param websiteKey Recaptcha website key
      *
+     * @return Solution
+     *
      * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
      */
     public static TaskResultResponse.SolutionData solveNoCaptchaProxyless(URL website, String websiteKey) throws InterruptedException {
@@ -69,6 +72,40 @@ public class AnticaptchaTask {
         api.setClientKey(ANTICAPTCHA_KEY);
         api.setWebsiteUrl(website);
         api.setWebsiteKey(websiteKey);
+
+        if (!api.createTask()) {
+            DebugHelper.out(
+                    "API v2 send failed. " + api.getErrorMessage(),
+                    DebugHelper.Type.ERROR
+            );
+        } else if (!api.waitForResult()) {
+            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
+        } else {
+            DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
+        }
+        return api.getTaskSolution();
+    }
+
+    /**
+     * <h2>NoCaptchaTaskProxyless : Google Recaptcha puzzle solving without proxies</h2>
+     * <p>
+     * This object of type Task contains data required to solve Google Recaptcha on a worker's computer.
+     * This task will be executed by our service using our own proxy servers and/or workers' IP addresses.
+     *
+     * @param website    Address of target web page
+     * @param websiteKey Recaptcha website key
+     * @param pageAction Widget action value.
+     *                   Website owner defines what user is doing on the page through this parameter.
+     * @return solution
+     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
+     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/9666606/NoCaptchaTaskProxyless+Google+Recaptcha+puzzle+solving+without+proxies">https://anticaptcha.atlassian.net</a>
+     */
+    public static TaskResultResponse.SolutionData solveRecaptchaV3Proxyless(URL website, String websiteKey, String pageAction) throws InterruptedException {
+        RecaptchaV3Proxyless api = new RecaptchaV3Proxyless();
+        api.setClientKey(ANTICAPTCHA_KEY);
+        api.setWebsiteUrl(website);
+        api.setWebsiteKey(websiteKey);
+        api.setPageAction(pageAction);
 
         if (!api.createTask()) {
             DebugHelper.out(
@@ -93,6 +130,7 @@ public class AnticaptchaTask {
      * @param objectName Name of the object. Example: banana
      * @param columns    Number of grid columns. Min 2, max 5
      * @param rows       Number of grid rows. Min 2, max 5
+     * @return Solution
      * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
      * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/410517505/SquareNetTextTask+select+objects+on+image+with+an+overlay+grid">https://anticaptcha.atlassian.net</a>
      */
@@ -123,13 +161,17 @@ public class AnticaptchaTask {
      * This type of task solves GeeTest captcha in our workers browsers.
      * Your app submits website address, gt key, challenge key and receives 3 parameters after task completion.
      *
+     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/416972814/GeeTestTaskProxyless+-+captcha+from+geetest.com+without+proxy">https://anticaptcha.atlassian.net</a>
+     *
      * @param website          Address of target web page
      * @param websiteKey       The domain key
      * @param websiteChallenge Changing token key.
      *                         Make sure to grab fresh one for each captcha,
      *                         otherwise you will be charged for error task.
+     *
+     * @return Solution
+     *
      * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
-     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/416972814/GeeTestTaskProxyless+-+captcha+from+geetest.com+without+proxy">https://anticaptcha.atlassian.net</a>
      */
     public static TaskResultResponse.SolutionData solveGeeTestProxyless(URL website, String websiteKey, String websiteChallenge) throws InterruptedException {
         GeeTestProxyless api = new GeeTestProxyless();
@@ -162,14 +204,16 @@ public class AnticaptchaTask {
      * We tried to create same thing in our API,
      * so task properties are absolutely the same except type.
      *
+     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/834502676/HCaptchaTaskProxyless+hCaptcha+puzzle+solving+without+proxy">https://anticaptcha.atlassian.net</a>
+     *
      * @param website    Address of target web page
      * @param websiteKey The domain key
+     *
+     * @return Solution
+     *
      * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
-     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/834502676/HCaptchaTaskProxyless+hCaptcha+puzzle+solving+without+proxy">https://anticaptcha.atlassian.net</a>
      */
     public static TaskResultResponse.SolutionData solveHCaptchaProxyless(URL website, String websiteKey) throws InterruptedException {
-        DebugHelper.setVerboseMode(true);
-
         HCaptchaProxyless api = new HCaptchaProxyless();
         api.setClientKey(ANTICAPTCHA_KEY);
         api.setWebsiteUrl(website);
