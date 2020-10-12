@@ -2,6 +2,7 @@ import com.anticaptcha.AnticaptchaTask;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 import com.anticaptcha.helper.FileHelper;
+import com.anticaptcha.http.Proxy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,17 @@ class AntiCaptchaTaskTest {
         String captcha = AnticaptchaTask.solveImageToText(captchaImageFile);
 
         Assertions.assertEquals(expectedCaptchaResult, captcha);
+    }
+
+    @Test
+    void noCaptchaTest() throws InterruptedException, MalformedURLException {
+        URL websiteUrl = new URL("http://http.myjino.ru/recaptcha/test-get.php");
+        String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
+        Proxy proxy = new Proxy();
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveNoCaptcha(websiteUrl, websiteKey, proxy);
+
+        Assertions.assertNotNull(solution.getGRecaptchaResponse());
     }
 
     @Test
