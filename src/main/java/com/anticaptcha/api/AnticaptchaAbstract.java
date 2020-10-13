@@ -1,6 +1,5 @@
 package com.anticaptcha.api;
 
-import com.anticaptcha.apiresponse.BalanceResponse;
 import com.anticaptcha.apiresponse.CreateTaskResponse;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
@@ -17,17 +16,22 @@ public abstract class AnticaptchaAbstract {
     protected TaskResultResponse taskInfo;
     private String host = "api.anti-captcha.com";
     private SchemeType scheme = SchemeType.HTTPS;
-    private String errorMessage;
+    protected String errorMessage;
     private Integer taskId;
-    private String clientKey;
+    protected String clientKey;
 
-    public enum ProxyTypeOption {
-        HTTP,
-        SOCKS4,
-        SOCKS5
+
+    @SuppressWarnings("WeakerAccess")
+    public void setClientKey(String clientKey_) {
+        clientKey = clientKey_;
     }
 
-    private JSONObject jsonPostRequest(ApiMethod methodName, JSONObject jsonPostData) {
+    @SuppressWarnings("WeakerAccess")
+    public String getErrorMessage() {
+        return errorMessage == null ? "no error message" : errorMessage;
+    }
+
+    protected JSONObject jsonPostRequest(ApiMethod methodName, JSONObject jsonPostData) {
 
         String url = scheme + "://" + host + "/" + StringHelper.toCamelCase(methodName.toString());
         HttpRequest request = new HttpRequest(url);
@@ -117,44 +121,6 @@ public abstract class AnticaptchaAbstract {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public Double getBalance() {
-        JSONObject jsonPostData = new JSONObject();
-
-        try {
-            jsonPostData.put("clientKey", clientKey);
-        } catch (JSONException e) {
-            errorMessage = e.getMessage();
-            DebugHelper.out("JSON compilation error: " + e.getMessage(), DebugHelper.Type.ERROR);
-
-            return null;
-        }
-
-        JSONObject postResult = jsonPostRequest(ApiMethod.GET_BALANCE, jsonPostData);
-
-        if (postResult == null) {
-            DebugHelper.out("API error", DebugHelper.Type.ERROR);
-
-            return null;
-        }
-
-        BalanceResponse balanceResponse = new BalanceResponse(postResult);
-
-        if (balanceResponse.getErrorId() == null || !balanceResponse.getErrorId().equals(0)) {
-            errorMessage = balanceResponse.getErrorDescription();
-            String errorId = balanceResponse.getErrorId() == null ? "" : balanceResponse.getErrorId().toString();
-
-            DebugHelper.out(
-                    "API error " + errorId + ": " + balanceResponse.getErrorDescription(),
-                    DebugHelper.Type.ERROR
-            );
-
-            return null;
-        }
-
-        return balanceResponse.getBalance();
-    }
-
-    @SuppressWarnings("WeakerAccess")
     public Boolean waitForResult(Integer maxSeconds, Integer currentSecond) throws InterruptedException {
         if (currentSecond >= maxSeconds) {
             DebugHelper.out("Time's out.", DebugHelper.Type.ERROR);
@@ -238,14 +204,11 @@ public abstract class AnticaptchaAbstract {
         return waitForResult(maxSeconds, 0);
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public void setClientKey(String clientKey_) {
-        clientKey = clientKey_;
-    }
 
-    @SuppressWarnings("WeakerAccess")
-    public String getErrorMessage() {
-        return errorMessage == null ? "no error message" : errorMessage;
+    public enum ProxyTypeOption {
+        HTTP,
+        SOCKS4,
+        SOCKS5
     }
 
     private enum SchemeType {
@@ -253,7 +216,7 @@ public abstract class AnticaptchaAbstract {
         HTTPS
     }
 
-    private enum ApiMethod {
+    protected enum ApiMethod {
         CREATE_TASK,
         GET_TASK_RESULT,
         GET_BALANCE

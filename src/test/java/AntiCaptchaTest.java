@@ -1,3 +1,4 @@
+import com.anticaptcha.api.AnticaptchaBase;
 import com.anticaptcha.api.CustomCaptcha;
 import com.anticaptcha.api.FunCaptcha;
 import com.anticaptcha.api.GeeTestProxyless;
@@ -194,7 +195,7 @@ class AntiCaptchaTest {
     void exampleGetBalance() {
         DebugHelper.setVerboseMode(true);
 
-        ImageToText api = new ImageToText();
+        AnticaptchaBase api = new AnticaptchaBase();
         api.setClientKey("1234567890123456789012");
 
         Double balance = api.getBalance();
