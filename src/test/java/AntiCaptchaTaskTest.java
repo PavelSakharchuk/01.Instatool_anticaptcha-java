@@ -3,6 +3,8 @@ import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 import com.anticaptcha.helper.FileHelper;
 import com.anticaptcha.http.Proxy;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AntiCaptchaTaskTest {
@@ -102,5 +105,67 @@ class AntiCaptchaTaskTest {
         TaskResultResponse.SolutionData solution = AnticaptchaTask.solveHCaptchaProxyless(websiteUrl, websiteKey);
 
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
+    }
+
+    @Test
+    void customCaptchaTest() throws InterruptedException {
+        String expectedLicensePlate = "TONFNTI";
+
+        JSONArray formJson = new JSONArray();
+        formJson.put(0, new JSONObject());
+        formJson.getJSONObject(0).put("label", "number");
+        formJson.getJSONObject(0).put("labelHint", false);
+        formJson.getJSONObject(0).put("contentType", false);
+        formJson.getJSONObject(0).put("name", "license_plate");
+        formJson.getJSONObject(0).put("inputType", "text");
+        formJson.getJSONObject(0).put("inputOptions", new JSONObject());
+        formJson.getJSONObject(0).getJSONObject("inputOptions").put("width", "100");
+        formJson.getJSONObject(0).getJSONObject("inputOptions").put(
+                "placeHolder",
+                "Enter letters and numbers without spaces"
+        );
+
+        formJson.put(1, new JSONObject());
+        formJson.getJSONObject(1).put("label", "Car color");
+        formJson.getJSONObject(1).put("labelHint", "Select the car color");
+        formJson.getJSONObject(1).put("contentType", false);
+        formJson.getJSONObject(1).put("name", "color");
+        formJson.getJSONObject(1).put("inputType", "select");
+        formJson.getJSONObject(1).put("inputOptions", new JSONArray());
+        formJson.getJSONObject(1).getJSONArray("inputOptions").put(0, new JSONObject());
+        formJson.getJSONObject(1).getJSONArray("inputOptions").getJSONObject(0).put(
+                "value",
+                "white"
+        );
+        formJson.getJSONObject(1).getJSONArray("inputOptions").getJSONObject(0).put(
+                "caption",
+                "White color"
+        );
+        formJson.getJSONObject(1).getJSONArray("inputOptions").put(1, new JSONObject());
+        formJson.getJSONObject(1).getJSONArray("inputOptions").getJSONObject(1).put(
+                "value",
+                "black"
+        );
+        formJson.getJSONObject(1).getJSONArray("inputOptions").getJSONObject(1).put(
+                "caption",
+                "Black color"
+        );
+        formJson.getJSONObject(1).getJSONArray("inputOptions").put(2, new JSONObject());
+        formJson.getJSONObject(1).getJSONArray("inputOptions").getJSONObject(2).put(
+                "value",
+                "gray"
+        );
+        formJson.getJSONObject(1).getJSONArray("inputOptions").getJSONObject(2).put(
+                "caption",
+                "Gray color"
+        );
+
+        int randInt = ThreadLocalRandom.current().nextInt(0, 10000);
+        String imageUrl = "https://files.anti-captcha.com/26/41f/c23/7c50ff19.jpg?random=" + randInt;
+        String assignment = "Enter the licence plate number";
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveCustomCaptcha(assignment, imageUrl, formJson);
+
+        Assertions.assertEquals(expectedLicensePlate, solution.getAnswers().get("license_plate"));
     }
 }

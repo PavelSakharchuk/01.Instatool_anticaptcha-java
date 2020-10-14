@@ -1,5 +1,6 @@
 package com.anticaptcha.api;
 
+import com.anticaptcha.Config;
 import com.anticaptcha.apiresponse.CreateTaskResponse;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
@@ -19,6 +20,11 @@ public abstract class AnticaptchaAbstract {
     protected String errorMessage;
     private Integer taskId;
     protected String clientKey;
+
+
+    public AnticaptchaAbstract() {
+        setClientKey(Config.INSTANCE.getKey());
+    }
 
 
     @SuppressWarnings("WeakerAccess")

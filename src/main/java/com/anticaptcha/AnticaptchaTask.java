@@ -1,6 +1,7 @@
 package com.anticaptcha;
 
 import com.anticaptcha.api.AnticaptchaAbstract;
+import com.anticaptcha.api.CustomCaptcha;
 import com.anticaptcha.api.GeeTestProxyless;
 import com.anticaptcha.api.HCaptchaProxyless;
 import com.anticaptcha.api.ImageToText;
@@ -11,18 +12,15 @@ import com.anticaptcha.api.SquareCaptcha;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 import com.anticaptcha.http.Proxy;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 
 public class AnticaptchaTask {
-    private static final String ANTICAPTCHA_KEY = Config.INSTANCE.getKey();
-
-
-    private AnticaptchaTask() {
-    }
-
 
     /**
      * <h2>ImageToTextTask : solve usual image captcha</h2>
@@ -34,7 +32,6 @@ public class AnticaptchaTask {
      */
     public static String solveImageToText(File captchaImageFile) throws InterruptedException {
         ImageToText api = new ImageToText();
-        api.setClientKey(ANTICAPTCHA_KEY);
         api.setFile(captchaImageFile);
 
         if (!api.createTask()) {
@@ -66,7 +63,6 @@ public class AnticaptchaTask {
      */
     public static TaskResultResponse.SolutionData solveNoCaptcha(URL website, String websiteKey, Proxy proxy) throws InterruptedException {
         NoCaptcha api = new NoCaptcha();
-        api.setClientKey(ANTICAPTCHA_KEY);
         api.setWebsiteUrl(website);
         api.setWebsiteKey(websiteKey);
 
@@ -108,7 +104,6 @@ public class AnticaptchaTask {
      */
     public static TaskResultResponse.SolutionData solveNoCaptchaProxyless(URL website, String websiteKey) throws InterruptedException {
         NoCaptchaProxyless api = new NoCaptchaProxyless();
-        api.setClientKey(ANTICAPTCHA_KEY);
         api.setWebsiteUrl(website);
         api.setWebsiteKey(websiteKey);
 
@@ -141,7 +136,6 @@ public class AnticaptchaTask {
      */
     public static TaskResultResponse.SolutionData solveRecaptchaV3Proxyless(URL website, String websiteKey, String pageAction) throws InterruptedException {
         RecaptchaV3Proxyless api = new RecaptchaV3Proxyless();
-        api.setClientKey(ANTICAPTCHA_KEY);
         api.setWebsiteUrl(website);
         api.setWebsiteKey(websiteKey);
         api.setPageAction(pageAction);
@@ -175,7 +169,6 @@ public class AnticaptchaTask {
      */
     public static List<Integer> solveSquareNet(File squareFile, String objectName, int columns, int rows) throws InterruptedException {
         SquareCaptcha api = new SquareCaptcha();
-        api.setClientKey(ANTICAPTCHA_KEY);
         // TODO: 12.10.2020: p.sakharchuk: Implement SquareObject
         api.setFile(squareFile);
         api.setObjectName(objectName);
@@ -212,7 +205,6 @@ public class AnticaptchaTask {
      */
     public static TaskResultResponse.SolutionData solveGeeTestProxyless(URL website, String websiteKey, String websiteChallenge) throws InterruptedException {
         GeeTestProxyless api = new GeeTestProxyless();
-        api.setClientKey(ANTICAPTCHA_KEY);
         api.setWebsiteUrl(website);
         api.setWebsiteKey(websiteKey);
         // "challenge" for testing you can get here: https://www.binance.com/security/getGtCode.html?t=1561554068768
@@ -237,7 +229,7 @@ public class AnticaptchaTask {
     /**
      * <h2>HCaptchaTaskProxyless : hCaptcha puzzle solving without proxy</h2>
      * <p>
-     * hCaptcha devs call their captcha "a drop-in replacement for Recaptcha".
+     * HCaptcha devs call their captcha "a drop-in replacement for Recaptcha".
      * We tried to create same thing in our API,
      * so task properties are absolutely the same except type.
      *
@@ -249,7 +241,6 @@ public class AnticaptchaTask {
      */
     public static TaskResultResponse.SolutionData solveHCaptchaProxyless(URL website, String websiteKey) throws InterruptedException {
         HCaptchaProxyless api = new HCaptchaProxyless();
-        api.setClientKey(ANTICAPTCHA_KEY);
         api.setWebsiteUrl(website);
         api.setWebsiteKey(websiteKey);
 
@@ -262,6 +253,49 @@ public class AnticaptchaTask {
             DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
         } else {
             DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
+        }
+        return api.getTaskSolution();
+    }
+
+    /**
+     * <h2>HCaptchaTaskProxyless : hCaptcha puzzle solving without proxy</h2>
+     * <p>
+     * This type of tasks is suitable for use when you need to describe what is on an image
+     * and you need workers to fill a custom form for this.
+     *
+     * @param assignment Describe what worker must do in English
+     * @param imageUrl   Address of an image
+     * @param formJson   Custom form object. It can be or JSON-object
+     * @return Solution
+     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
+     * @see <a href="https://developer.aliyun.com/mirror/npm/package/anticaptcha2">https://developer.aliyun.com</a>
+     */
+    public static TaskResultResponse.SolutionData solveCustomCaptcha(String assignment, String imageUrl, JSONArray formJson) throws InterruptedException {
+        CustomCaptcha api = new CustomCaptcha();
+        api.setImageUrl(imageUrl);
+        api.setAssignment(assignment);
+        api.setForms(formJson);
+
+        if (!api.createTask()) {
+            DebugHelper.out(
+                    "API v2 send failed. " + api.getErrorMessage(),
+                    DebugHelper.Type.ERROR
+            );
+        } else if (!api.waitForResult()) {
+            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
+        } else {
+            JSONObject answers = api.getTaskSolution().getAnswers();
+            Iterator<?> keys = answers.keys();
+
+            while (keys.hasNext()) {
+                String question = (String) keys.next();
+                String answer = answers.getString(question);
+
+                DebugHelper.out(
+                        "The answer for the question '" + question + "' : " + answer,
+                        DebugHelper.Type.SUCCESS
+                );
+            }
         }
         return api.getTaskSolution();
     }
