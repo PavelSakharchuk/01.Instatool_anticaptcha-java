@@ -4,7 +4,7 @@ API version 2 works on address https://api.anti-captcha.com/ and it works only v
 
 
 ### About ###
-This is fork reworked of original lib:
+This is reworked fork of original lib:
 https://github.com/AdminAnticaptcha/anticaptcha-java.
 
 
