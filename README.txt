@@ -1,7 +1,7 @@
 AntiCaptcha lib
 ======================
 
-#### About ###
+### About ###
 This is fork reworked of original lib:
 https://github.com/AdminAnticaptcha/anticaptcha-java.
 
@@ -13,7 +13,7 @@ Just open Gradle or Maven tab copy artifact info
 and place it with dependency management repository in your project build configuration
 
 
-### Examples ##
+### Examples ###
 You can find examples in the test class:
 - tasks: https://github.com/PavelSakharchuk/01.Instatool_anticaptcha-java/blob/master/src/test/java/AntiCaptchaTaskTest.java
 - other: https://github.com/PavelSakharchuk/01.Instatool_anticaptcha-java/blob/master/src/test/java/AntiCaptchaBaseTest.java
