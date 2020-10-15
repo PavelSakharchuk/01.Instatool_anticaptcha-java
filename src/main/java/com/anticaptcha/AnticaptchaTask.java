@@ -2,6 +2,7 @@ package com.anticaptcha;
 
 import com.anticaptcha.api.AnticaptchaAbstract;
 import com.anticaptcha.api.CustomCaptcha;
+import com.anticaptcha.api.FunCaptcha;
 import com.anticaptcha.api.GeeTestProxyless;
 import com.anticaptcha.api.HCaptchaProxyless;
 import com.anticaptcha.api.ImageToText;
@@ -56,7 +57,7 @@ public class AnticaptchaTask {
      *
      * @param website    Address of target web page
      * @param websiteKey Recaptcha website key
-     * @param proxy      Proxy object with type, address, port, login, password and User-Agent, .
+     * @param proxy      Proxy object with type, address, port, login, password and User-Agent
      * @return Solution
      * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
      * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/5079089/NoCaptchaTask+Google+Recaptcha+puzzle+solving">https://anticaptcha.atlassian.net</a>
@@ -149,6 +150,44 @@ public class AnticaptchaTask {
             DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
         } else {
             DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
+        }
+        return api.getTaskSolution();
+    }
+
+    /**
+     * <h2>FunCaptchaTask - rotating captcha funcaptcha.com</h2>
+     * <p>
+     * This type of task solves funcaptcha.com puzzle in our workers browsers.
+     * Your app submits website address, public key and receives submit token after task completion.
+     *
+     * @param website    Address of target web page
+     * @param websiteKey Recaptcha website key
+     * @param proxy      Proxy object with type, address, port, login, password and User-Agent
+     * @return solution
+     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
+     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/65634347/FunCaptchaTask+-+rotating+captcha+funcaptcha.com">https://anticaptcha.atlassian.net</a>
+     */
+    public static TaskResultResponse.SolutionData solveFuncaptcha(URL website, String websiteKey, Proxy proxy) throws InterruptedException {
+        FunCaptcha api = new FunCaptcha();
+        api.setWebsiteUrl(website);
+        api.setWebsitePublicKey(websiteKey);
+
+        api.setUserAgent(proxy.getUserAgent());
+        api.setProxyType(proxy.getProxyType());
+        api.setProxyAddress(proxy.getProxyAddress());
+        api.setProxyPort(proxy.getProxyPort());
+        api.setProxyLogin(proxy.getProxyLogin());
+        api.setProxyPassword(proxy.getProxyPassword());
+
+        if (!api.createTask()) {
+            DebugHelper.out(
+                    "API v2 send failed. " + api.getErrorMessage(),
+                    DebugHelper.Type.ERROR
+            );
+        } else if (!api.waitForResult()) {
+            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
+        } else {
+            DebugHelper.out("Result: " + api.getTaskSolution().getToken(), DebugHelper.Type.SUCCESS);
         }
         return api.getTaskSolution();
     }

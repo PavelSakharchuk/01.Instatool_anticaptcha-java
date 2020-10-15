@@ -71,6 +71,17 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
+    void funcaptchaTest() throws InterruptedException, MalformedURLException {
+        URL websiteUrl = new URL("http://http.myjino.ru/funcaptcha_test/");
+        String websiteKey = "DE0B0BB7-1EE4-4D70-1853-31B835D4506B";
+        Proxy proxy = new Proxy();
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveFuncaptcha(websiteUrl, websiteKey, proxy);
+
+        Assertions.assertNotNull(solution.getGRecaptchaResponse());
+    }
+
+    @Test
     void squareNetTest() throws InterruptedException, URISyntaxException {
         File squareFile = FileHelper.getFileFromResource("square.jpg");
         String objectName = "FISH / РЫБА";
