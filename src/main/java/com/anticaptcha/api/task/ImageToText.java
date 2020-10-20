@@ -6,6 +6,7 @@ import com.anticaptcha.api.TaskType;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 import com.anticaptcha.helper.StringHelper;
+import lombok.Setter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,6 +17,7 @@ import java.io.File;
  *
  * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/5079091/ImageToTextTask+solve+usual+image+captcha">https://anticaptcha.atlassian.net</a>
  */
+@Setter
 public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTaskProtocol {
     /**
      * Defines type of the task.
@@ -85,54 +87,6 @@ public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTask
     }
 
 
-    public Boolean getPhrase() {
-        return phrase;
-    }
-
-    public void setPhrase(Boolean phrase) {
-        this.phrase = phrase;
-    }
-
-    public Boolean getCase_() {
-        return case_;
-    }
-
-    public void setCase_(Boolean case_) {
-        this.case_ = case_;
-    }
-
-    public NumericOption getNumeric() {
-        return numeric;
-    }
-
-    public void setNumeric(NumericOption numeric) {
-        this.numeric = numeric;
-    }
-
-    public Integer getMath() {
-        return math;
-    }
-
-    public void setMath(Integer math) {
-        this.math = math;
-    }
-
-    public Integer getMinLength() {
-        return minLength;
-    }
-
-    public void setMinLength(Integer minLength) {
-        this.minLength = minLength;
-    }
-
-    public Integer getMaxLength() {
-        return maxLength;
-    }
-
-    public void setMaxLength(Integer maxLength) {
-        this.maxLength = maxLength;
-    }
-
     @Override
     public JSONObject getPostData() {
 
@@ -151,6 +105,8 @@ public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTask
             postData.put("math", math);
             postData.put("minLength", minLength);
             postData.put("maxLength", maxLength);
+            postData.put("comment", comment);
+            postData.put("websiteURL", websiteURL);
         } catch (JSONException e) {
             DebugHelper.out("JSON compilation error: " + e.getMessage(), DebugHelper.Type.ERROR);
 
@@ -175,6 +131,7 @@ public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTask
 
         return taskInfo.getSolution();
     }
+
 
     public enum NumericOption {
         NO_REQUIREMENTS,
