@@ -11,53 +11,71 @@ import org.json.JSONObject;
 
 import java.io.File;
 
+/**
+ * <h2>ImageToTextTask : solve usual image captcha</h2>
+ *
+ * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/5079091/ImageToTextTask+solve+usual+image+captcha">https://anticaptcha.atlassian.net</a>
+ */
 public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTaskProtocol {
-    private String type = TaskType.IMAGE_TO_TEXT_TASK.getType();
+    /**
+     * Defines type of the task.
+     */
+    private final String type = TaskType.IMAGE_TO_TEXT_TASK.getType();
+    /**
+     * File body encoded in base64. Make sure to send it without line breaks.
+     */
+    private final String bodyBase64;
+
+    /**
+     * false - [default] no requirements
+     * true - worker must enter an answer with at least one "space"
+     */
     private Boolean phrase;
+    /**
+     * false - [default] no requirements
+     * true - worker will see a special mark telling that answer must be entered with case sensitivity.
+     */
     private Boolean case_;
+    /**
+     * 0 - [default] no requirements
+     * 1 - only number are allowed
+     * 2 - any letters are allowed except numbers
+     */
     private NumericOption numeric = NumericOption.NO_REQUIREMENTS;
+    /**
+     * false - [default] no requirements
+     * true - worker will see a special mark telling that answer must be calculated
+     */
     private Integer math;
+    /**
+     * 0 - [default] no requirements
+     * >1 - defines minimum length of the answer
+     */
     private Integer minLength;
+    /**
+     * 0 - [default] no requirements
+     * >1 - defines maximum length of the answer
+     */
     private Integer maxLength;
-    private String bodyBase64;
+    /**
+     * Additional comment for workers like "enter letters in red color".
+     * Result is not guaranteed.
+     */
+    private Integer comment;
+    /**
+     * Optional parameter to distinguish source of image captchas in spending statistics
+     */
+    private Integer websiteURL;
 
-    public void setPhrase(Boolean phrase) {
-        this.phrase = phrase;
-    }
 
-    public void setCase_(Boolean case_) {
-        this.case_ = case_;
-    }
-
-    public void setNumeric(NumericOption numeric) {
-        this.numeric = numeric;
-    }
-
-    public void setMath(Integer math) {
-        this.math = math;
-    }
-
-    public void setMinLength(Integer minLength) {
-        this.minLength = minLength;
-    }
-
-    public void setMaxLength(Integer maxLength) {
-        this.maxLength = maxLength;
-    }
-
-    public enum NumericOption {
-        NO_REQUIREMENTS,
-        NUMBERS_ONLY,
-        ANY_LETTERS_EXCEPT_NUMBERS
-    }
-
-    public void setFile(File file) {
-        if (!file.exists() || file.isDirectory()) {
-            DebugHelper.out("File " + file.getPath() + " not found", DebugHelper.Type.ERROR);
+    public ImageToText(File bodyFile) {
+        if (!bodyFile.exists() || bodyFile.isDirectory()) {
+            this.bodyBase64 = null;
+            DebugHelper.out("File " + bodyFile.getPath() + " not found", DebugHelper.Type.ERROR);
         } else {
-            bodyBase64 = StringHelper.imageFileToBase64String(file);
+            this.bodyBase64 = StringHelper.imageFileToBase64String(bodyFile);
 
-            if (bodyBase64 == null) {
+            if (this.bodyBase64 == null) {
                 DebugHelper.out(
                         "Could not convert the file \" + value + \" to base64. Is this an image file?",
                         DebugHelper.Type.ERROR
@@ -66,28 +84,53 @@ public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTask
         }
     }
 
+
     public Boolean getPhrase() {
         return phrase;
+    }
+
+    public void setPhrase(Boolean phrase) {
+        this.phrase = phrase;
     }
 
     public Boolean getCase_() {
         return case_;
     }
 
+    public void setCase_(Boolean case_) {
+        this.case_ = case_;
+    }
+
     public NumericOption getNumeric() {
         return numeric;
+    }
+
+    public void setNumeric(NumericOption numeric) {
+        this.numeric = numeric;
     }
 
     public Integer getMath() {
         return math;
     }
 
+    public void setMath(Integer math) {
+        this.math = math;
+    }
+
     public Integer getMinLength() {
         return minLength;
     }
 
+    public void setMinLength(Integer minLength) {
+        this.minLength = minLength;
+    }
+
     public Integer getMaxLength() {
         return maxLength;
+    }
+
+    public void setMaxLength(Integer maxLength) {
+        this.maxLength = maxLength;
     }
 
     @Override
@@ -133,7 +176,9 @@ public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTask
         return taskInfo.getSolution();
     }
 
-    public void setBodyBase64(String bodyBase64) {
-        this.bodyBase64 = bodyBase64;
+    public enum NumericOption {
+        NO_REQUIREMENTS,
+        NUMBERS_ONLY,
+        ANY_LETTERS_EXCEPT_NUMBERS
     }
 }

@@ -23,18 +23,8 @@ import java.util.List;
 
 public class AnticaptchaTask {
 
-    /**
-     * <h2>ImageToTextTask : solve usual image captcha</h2>
-     *
-     * @param captchaImageFile File image captcha
-     * @return Solution
-     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
-     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/5079091/ImageToTextTask+solve+usual+image+captcha">https://anticaptcha.atlassian.net</a>
-     */
-    public static ImageToText imageToTextBuilder(File captchaImageFile) throws InterruptedException {
-        ImageToText api = new ImageToText();
-        api.setFile(captchaImageFile);
-        return api;
+    public static ImageToText imageToTextBuilder(File captchaImageFile) {
+        return new ImageToText(captchaImageFile);
     }
 
     /**
