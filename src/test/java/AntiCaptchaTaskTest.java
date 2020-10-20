@@ -32,9 +32,10 @@ class AntiCaptchaTaskTest {
         File captchaImageFile = FileHelper.getFileFromResource("captcha.jpg");
         String expectedCaptchaResult = "abournes";
 
-        String captcha = AnticaptchaTask.solveImageToText(captchaImageFile);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.imageToTextBuilder(captchaImageFile)
+                .getTaskSolution();
 
-        Assertions.assertEquals(expectedCaptchaResult, captcha);
+        Assertions.assertEquals(expectedCaptchaResult, solution.getText());
     }
 
     @Test

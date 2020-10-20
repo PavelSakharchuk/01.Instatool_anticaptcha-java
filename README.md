@@ -26,6 +26,7 @@ Need to add file 'src/main/resources/anticaptcha.properties' with following cont
 ```
 key=51065637323daa35622c25435460b871
 ```
+[Exemple](https://github.com/PavelSakharchuk/01.Instatool_anticaptcha-java/blob/master/src/main/resources/anticaptcha_exemple.properties)
 You can get your key from [www.anti-captcha.com](https://anti-captcha.com/clients/reports/dashboard)
 
 

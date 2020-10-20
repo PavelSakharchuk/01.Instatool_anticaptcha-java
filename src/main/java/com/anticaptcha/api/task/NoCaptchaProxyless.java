@@ -1,5 +1,7 @@
-package com.anticaptcha.api;
+package com.anticaptcha.api.task;
 
+import com.anticaptcha.api.AnticaptchaAbstract;
+import com.anticaptcha.api.IAnticaptchaTaskProtocol;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 import org.json.JSONException;
@@ -7,11 +9,10 @@ import org.json.JSONObject;
 
 import java.net.URL;
 
-public class RecaptchaV3Proxyless extends AnticaptchaAbstract implements IAnticaptchaTaskProtocol {
+public class NoCaptchaProxyless extends AnticaptchaAbstract implements IAnticaptchaTaskProtocol {
     private URL websiteUrl;
     private String websiteKey;
-    private String pageAction;
-    private Double minScore = 0.3;
+    private String websiteSToken;
 
     public void setWebsiteUrl(URL websiteUrl) {
         this.websiteUrl = websiteUrl;
@@ -21,24 +22,8 @@ public class RecaptchaV3Proxyless extends AnticaptchaAbstract implements IAntica
         this.websiteKey = websiteKey;
     }
 
-    public String getPageAction() {
-        return pageAction;
-    }
-
-    public void setPageAction(String pageAction) {
-        this.pageAction = pageAction;
-    }
-
-    public Double getMinScore() {
-        return minScore;
-    }
-
-    public void setMinScore(Double minScore) {
-        if (!minScore.equals(0.3) && !minScore.equals(0.7) && !minScore.equals(0.9)) {
-            DebugHelper.out("minScore must be one of these: 0.3, 0.7, 0.9; you passed " + minScore + "; 0.3 will be set", DebugHelper.Type.ERROR);
-        } else {
-            this.minScore = minScore;
-        }
+    public void setWebsiteSToken(String websiteSToken) {
+        this.websiteSToken = websiteSToken;
     }
 
     @Override
@@ -46,11 +31,10 @@ public class RecaptchaV3Proxyless extends AnticaptchaAbstract implements IAntica
         JSONObject postData = new JSONObject();
 
         try {
-            postData.put("type", "RecaptchaV3TaskProxyless");
+            postData.put("type", "NoCaptchaTaskProxyless");
             postData.put("websiteURL", websiteUrl.toString());
             postData.put("websiteKey", websiteKey);
-            postData.put("pageAction", pageAction);
-            postData.put("minScore", minScore);
+            postData.put("websiteSToken", websiteSToken);
         } catch (JSONException e) {
             DebugHelper.out("JSON compilation error: " + e.getMessage(), DebugHelper.Type.ERROR);
 

@@ -1,15 +1,15 @@
 package com.anticaptcha;
 
 import com.anticaptcha.api.AnticaptchaAbstract;
-import com.anticaptcha.api.CustomCaptcha;
-import com.anticaptcha.api.FunCaptcha;
-import com.anticaptcha.api.GeeTestProxyless;
-import com.anticaptcha.api.HCaptchaProxyless;
-import com.anticaptcha.api.ImageToText;
-import com.anticaptcha.api.NoCaptcha;
-import com.anticaptcha.api.NoCaptchaProxyless;
-import com.anticaptcha.api.RecaptchaV3Proxyless;
-import com.anticaptcha.api.SquareCaptcha;
+import com.anticaptcha.api.task.CustomCaptcha;
+import com.anticaptcha.api.task.FunCaptcha;
+import com.anticaptcha.api.task.GeeTestProxyless;
+import com.anticaptcha.api.task.HCaptchaProxyless;
+import com.anticaptcha.api.task.ImageToText;
+import com.anticaptcha.api.task.NoCaptcha;
+import com.anticaptcha.api.task.NoCaptchaProxyless;
+import com.anticaptcha.api.task.RecaptchaV3Proxyless;
+import com.anticaptcha.api.task.SquareCaptcha;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 import com.anticaptcha.http.Proxy;
@@ -31,21 +31,10 @@ public class AnticaptchaTask {
      * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
      * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/5079091/ImageToTextTask+solve+usual+image+captcha">https://anticaptcha.atlassian.net</a>
      */
-    public static String solveImageToText(File captchaImageFile) throws InterruptedException {
+    public static ImageToText imageToTextBuilder(File captchaImageFile) throws InterruptedException {
         ImageToText api = new ImageToText();
         api.setFile(captchaImageFile);
-
-        if (!api.createTask()) {
-            DebugHelper.out(
-                    "API v2 send failed. " + api.getErrorMessage(),
-                    DebugHelper.Type.ERROR
-            );
-        } else if (!api.waitForResult()) {
-            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
-        } else {
-            DebugHelper.out("Result: " + api.getTaskSolution().getText(), DebugHelper.Type.SUCCESS);
-        }
-        return api.getTaskSolution().getText();
+        return api;
     }
 
     /**

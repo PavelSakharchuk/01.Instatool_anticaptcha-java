@@ -1,5 +1,8 @@
-package com.anticaptcha.api;
+package com.anticaptcha.api.task;
 
+import com.anticaptcha.api.AnticaptchaAbstract;
+import com.anticaptcha.api.IAnticaptchaTaskProtocol;
+import com.anticaptcha.api.TaskType;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 import com.anticaptcha.helper.StringHelper;
@@ -9,6 +12,7 @@ import org.json.JSONObject;
 import java.io.File;
 
 public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTaskProtocol {
+    private String type = TaskType.IMAGE_TO_TEXT_TASK.getType();
     private Boolean phrase;
     private Boolean case_;
     private NumericOption numeric = NumericOption.NO_REQUIREMENTS;
@@ -96,7 +100,7 @@ public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTask
         JSONObject postData = new JSONObject();
 
         try {
-            postData.put("type", "ImageToTextTask");
+            postData.put("type", type);
             postData.put("body", bodyBase64.replace("\r", "").replace("\n", ""));
             postData.put("phrase", phrase);
             postData.put("case", case_);
@@ -114,7 +118,18 @@ public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTask
     }
 
     @Override
-    public TaskResultResponse.SolutionData getTaskSolution() {
+    public TaskResultResponse.SolutionData getTaskSolution() throws InterruptedException {
+        if (!this.createTask()) {
+            DebugHelper.out(
+                    "API v2 send failed. " + this.getErrorMessage(),
+                    DebugHelper.Type.ERROR
+            );
+        } else if (!this.waitForResult()) {
+            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
+        } else {
+            DebugHelper.out("Result: " + taskInfo.getSolution().getText(), DebugHelper.Type.SUCCESS);
+        }
+
         return taskInfo.getSolution();
     }
 

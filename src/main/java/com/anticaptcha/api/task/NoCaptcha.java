@@ -1,4 +1,4 @@
-package com.anticaptcha.api;
+package com.anticaptcha.api.task;
 
 import com.anticaptcha.helper.DebugHelper;
 import org.json.JSONException;

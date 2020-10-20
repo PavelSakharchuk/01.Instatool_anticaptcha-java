@@ -1,5 +1,7 @@
-package com.anticaptcha.api;
+package com.anticaptcha.api.task;
 
+import com.anticaptcha.api.AnticaptchaAbstract;
+import com.anticaptcha.api.IAnticaptchaTaskProtocol;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 import org.json.JSONException;
