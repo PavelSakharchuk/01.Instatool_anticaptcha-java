@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
 
-public abstract class AnticaptchaAbstract {
+public abstract class AnticaptchaAbstract implements IAnticaptchaTaskProtocol {
     protected TaskResultResponse taskInfo;
     private String host = "api.anti-captcha.com";
     private SchemeType scheme = SchemeType.HTTPS;
@@ -67,12 +67,13 @@ public abstract class AnticaptchaAbstract {
         }
     }
 
+    @Override
     public abstract JSONObject getPostData();
 
     @SuppressWarnings("WeakerAccess")
-    public Boolean createTask() {
+    private Boolean createTask() {
         JSONObject taskJson = getPostData();
-
+        // TODO: 21.10.2020: Need to add debug logger for taskJson
         if (taskJson == null) {
             DebugHelper.out("JSON error", DebugHelper.Type.ERROR);
 
@@ -202,17 +203,34 @@ public abstract class AnticaptchaAbstract {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public Boolean waitForResult() throws InterruptedException {
+    private Boolean waitForResult() throws InterruptedException {
         return waitForResult(120, 0);
     }
 
-    public Boolean waitForResult(Integer maxSeconds) throws InterruptedException {
+    private Boolean waitForResult(Integer maxSeconds) throws InterruptedException {
         return waitForResult(maxSeconds, 0);
+    }
+
+    @Override
+    public TaskResultResponse.SolutionData getTaskSolution() throws InterruptedException {
+        if (!this.createTask()) {
+            DebugHelper.out(
+                    "API v2 send failed. " + this.getErrorMessage(),
+                    DebugHelper.Type.ERROR
+            );
+        } else if (!this.waitForResult()) {
+            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
+        } else {
+            DebugHelper.out("Result: " + taskInfo.getSolution(), DebugHelper.Type.SUCCESS);
+        }
+
+        return taskInfo.getSolution();
     }
 
 
     public enum ProxyTypeOption {
         HTTP,
+        HTTPS,
         SOCKS4,
         SOCKS5
     }

@@ -1,9 +1,7 @@
 package com.anticaptcha.api.task;
 
 import com.anticaptcha.api.AnticaptchaAbstract;
-import com.anticaptcha.api.IAnticaptchaTaskProtocol;
 import com.anticaptcha.api.TaskType;
-import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 import com.anticaptcha.helper.StringHelper;
 import lombok.Setter;
@@ -11,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.net.URL;
 
 /**
  * <h2>ImageToTextTask : solve usual image captcha</h2>
@@ -18,7 +17,7 @@ import java.io.File;
  * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/5079091/ImageToTextTask+solve+usual+image+captcha">https://anticaptcha.atlassian.net</a>
  */
 @Setter
-public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTaskProtocol {
+public class ImageToText extends AnticaptchaAbstract {
     /**
      * Defines type of the task.
      */
@@ -43,12 +42,12 @@ public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTask
      * 1 - only number are allowed
      * 2 - any letters are allowed except numbers
      */
-    private NumericOption numeric = NumericOption.NO_REQUIREMENTS;
+    private Integer numeric = NumericOption.NO_REQUIREMENTS.getNumeric();
     /**
      * false - [default] no requirements
      * true - worker will see a special mark telling that answer must be calculated
      */
-    private Integer math;
+    private Boolean math;
     /**
      * 0 - [default] no requirements
      * >1 - defines minimum length of the answer
@@ -63,11 +62,11 @@ public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTask
      * Additional comment for workers like "enter letters in red color".
      * Result is not guaranteed.
      */
-    private Integer comment;
+    private String comment;
     /**
      * Optional parameter to distinguish source of image captchas in spending statistics
      */
-    private Integer websiteURL;
+    private String websiteURL;
 
 
     public ImageToText(File bodyFile) {
@@ -101,7 +100,7 @@ public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTask
             postData.put("body", bodyBase64.replace("\r", "").replace("\n", ""));
             postData.put("phrase", phrase);
             postData.put("case", case_);
-            postData.put("numeric", numeric.equals(NumericOption.NO_REQUIREMENTS) ? 0 : numeric.equals(NumericOption.NUMBERS_ONLY) ? 1 : 2);
+            postData.put("numeric", numeric);
             postData.put("math", math);
             postData.put("minLength", minLength);
             postData.put("maxLength", maxLength);
@@ -116,26 +115,24 @@ public class ImageToText extends AnticaptchaAbstract implements IAnticaptchaTask
         return postData;
     }
 
-    @Override
-    public TaskResultResponse.SolutionData getTaskSolution() throws InterruptedException {
-        if (!this.createTask()) {
-            DebugHelper.out(
-                    "API v2 send failed. " + this.getErrorMessage(),
-                    DebugHelper.Type.ERROR
-            );
-        } else if (!this.waitForResult()) {
-            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
-        } else {
-            DebugHelper.out("Result: " + taskInfo.getSolution().getText(), DebugHelper.Type.SUCCESS);
-        }
-
-        return taskInfo.getSolution();
+    public void setWebsiteURL(URL websiteURL) {
+        this.websiteURL = websiteURL.toString();
     }
 
 
     public enum NumericOption {
-        NO_REQUIREMENTS,
-        NUMBERS_ONLY,
-        ANY_LETTERS_EXCEPT_NUMBERS
+        NO_REQUIREMENTS(0),
+        NUMBERS_ONLY(1),
+        ANY_LETTERS_EXCEPT_NUMBERS(2);
+
+        private Integer numeric;
+
+        NumericOption(Integer numeric) {
+            this.numeric = numeric;
+        }
+
+        public Integer getNumeric() {
+            return numeric;
+        }
     }
 }

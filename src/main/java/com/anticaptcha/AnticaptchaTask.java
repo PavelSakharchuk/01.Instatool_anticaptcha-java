@@ -1,6 +1,5 @@
 package com.anticaptcha;
 
-import com.anticaptcha.api.AnticaptchaAbstract;
 import com.anticaptcha.api.task.CustomCaptcha;
 import com.anticaptcha.api.task.FunCaptcha;
 import com.anticaptcha.api.task.GeeTestProxyless;
@@ -14,89 +13,30 @@ import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 import com.anticaptcha.http.Proxy;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 
 public class AnticaptchaTask {
 
     public static ImageToText imageToTextBuilder(File captchaImageFile) {
+        // TODO: 21.10.2020: p.sakharchuk: Need to add logger
+//        DebugHelper.out("Result: " + api.getTaskSolution().getText(), DebugHelper.Type.SUCCESS);
         return new ImageToText(captchaImageFile);
     }
 
-    /**
-     * <h2>NoCaptchaTask : Google Recaptcha puzzle solving</h2>
-     * <p>
-     * This object of type Task contains data required to solve Google Recaptcha on a worker's computer.
-     * To provide solid universality for solving this type of task
-     * we have reproduce every piece of environment used for an automation task you plan to complete.
-     *
-     * @param website    Address of target web page
-     * @param websiteKey Recaptcha website key
-     * @param proxy      Proxy object with type, address, port, login, password and User-Agent
-     * @return Solution
-     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
-     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/5079089/NoCaptchaTask+Google+Recaptcha+puzzle+solving">https://anticaptcha.atlassian.net</a>
-     */
     public static TaskResultResponse.SolutionData solveNoCaptcha(URL website, String websiteKey, Proxy proxy) throws InterruptedException {
-        NoCaptcha api = new NoCaptcha();
-        api.setWebsiteUrl(website);
-        api.setWebsiteKey(websiteKey);
-
-        api.setUserAgent(proxy.getUserAgent());
-        api.setProxyType(proxy.getProxyType());
-        api.setProxyAddress(proxy.getProxyAddress());
-        api.setProxyPort(proxy.getProxyPort());
-        api.setProxyLogin(proxy.getProxyLogin());
-        api.setProxyPassword(proxy.getProxyPassword());
-
-        if (!api.createTask()) {
-            DebugHelper.out(
-                    "API v2 send failed. " + api.getErrorMessage(),
-                    DebugHelper.Type.ERROR
-            );
-        } else if (!api.waitForResult()) {
-            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
-        } else {
-            DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
-        }
+        NoCaptcha api = new NoCaptcha(website, websiteKey, proxy);
+        // TODO: 21.10.2020: p.sakharchuk: Need to add logger
+//        DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
         return api.getTaskSolution();
     }
 
-    /**
-     * <h2>NoCaptchaTaskProxyless : Google Recaptcha puzzle solving without proxies</h2>
-     * <p>
-     * This object of type Task contains data required to solve Google Recaptcha on a worker's computer.
-     * This task will be executed by our service using our own proxy servers and/or workers' IP addresses.
-     * Costs for this task is 10% higher than NoCaptchaTask,
-     * because the problem of overcoming per-IP limits falls on us.
-     * As may you know, number of daily Recaptcha solutions is limited for each IP address
-     * and we'll have to deal with proxies ourselves.
-     *
-     * @param website    Address of target web page
-     * @param websiteKey Recaptcha website key
-     * @return Solution
-     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
-     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/9666606/NoCaptchaTaskProxyless+Google+Recaptcha+puzzle+solving+without+proxies">https://anticaptcha.atlassian.net</a>
-     */
     public static TaskResultResponse.SolutionData solveNoCaptchaProxyless(URL website, String websiteKey) throws InterruptedException {
-        NoCaptchaProxyless api = new NoCaptchaProxyless();
-        api.setWebsiteUrl(website);
-        api.setWebsiteKey(websiteKey);
-
-        if (!api.createTask()) {
-            DebugHelper.out(
-                    "API v2 send failed. " + api.getErrorMessage(),
-                    DebugHelper.Type.ERROR
-            );
-        } else if (!api.waitForResult()) {
-            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
-        } else {
-            DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
-        }
+        NoCaptchaProxyless api = new NoCaptchaProxyless(website, websiteKey);
+        // TODO: 21.10.2020: p.sakharchuk: Need to add logger
+        DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
         return api.getTaskSolution();
     }
 
@@ -111,7 +51,6 @@ public class AnticaptchaTask {
      * @param pageAction Widget action value.
      *                   Website owner defines what user is doing on the page through this parameter.
      * @return solution
-     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
      * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/9666606/NoCaptchaTaskProxyless+Google+Recaptcha+puzzle+solving+without+proxies">https://anticaptcha.atlassian.net</a>
      */
     public static TaskResultResponse.SolutionData solveRecaptchaV3Proxyless(URL website, String websiteKey, String pageAction) throws InterruptedException {
@@ -120,16 +59,8 @@ public class AnticaptchaTask {
         api.setWebsiteKey(websiteKey);
         api.setPageAction(pageAction);
 
-        if (!api.createTask()) {
-            DebugHelper.out(
-                    "API v2 send failed. " + api.getErrorMessage(),
-                    DebugHelper.Type.ERROR
-            );
-        } else if (!api.waitForResult()) {
-            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
-        } else {
-            DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
-        }
+        // TODO: 21.10.2020: p.sakharchuk: Need to add logger
+//            DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
         return api.getTaskSolution();
     }
 
@@ -143,7 +74,6 @@ public class AnticaptchaTask {
      * @param websiteKey Recaptcha website key
      * @param proxy      Proxy object with type, address, port, login, password and User-Agent
      * @return solution
-     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
      * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/65634347/FunCaptchaTask+-+rotating+captcha+funcaptcha.com">https://anticaptcha.atlassian.net</a>
      */
     public static TaskResultResponse.SolutionData solveFuncaptcha(URL website, String websiteKey, Proxy proxy) throws InterruptedException {
@@ -158,16 +88,8 @@ public class AnticaptchaTask {
         api.setProxyLogin(proxy.getProxyLogin());
         api.setProxyPassword(proxy.getProxyPassword());
 
-        if (!api.createTask()) {
-            DebugHelper.out(
-                    "API v2 send failed. " + api.getErrorMessage(),
-                    DebugHelper.Type.ERROR
-            );
-        } else if (!api.waitForResult()) {
-            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
-        } else {
-            DebugHelper.out("Result: " + api.getTaskSolution().getToken(), DebugHelper.Type.SUCCESS);
-        }
+        // TODO: 21.10.2020: p.sakharchuk: Need to add logger
+//            DebugHelper.out("Result: " + api.getTaskSolution().getToken(), DebugHelper.Type.SUCCESS);
         return api.getTaskSolution();
     }
 
@@ -182,7 +104,6 @@ public class AnticaptchaTask {
      * @param columns    Number of grid columns. Min 2, max 5
      * @param rows       Number of grid rows. Min 2, max 5
      * @return Solution
-     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
      * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/410517505/SquareNetTextTask+select+objects+on+image+with+an+overlay+grid">https://anticaptcha.atlassian.net</a>
      */
     public static List<Integer> solveSquareNet(File squareFile, String objectName, int columns, int rows) throws InterruptedException {
@@ -193,16 +114,8 @@ public class AnticaptchaTask {
         api.setColumnsCount(columns);
         api.setRowsCount(rows);
 
-        if (!api.createTask()) {
-            DebugHelper.out(
-                    "API v2 send failed. " + api.getErrorMessage(),
-                    DebugHelper.Type.ERROR
-            );
-        } else if (!api.waitForResult()) {
-            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
-        } else {
-            DebugHelper.out("Result: " + api.getTaskSolution().getCellNumbers(), DebugHelper.Type.SUCCESS);
-        }
+        // TODO: 21.10.2020: p.sakharchuk: Need to add logger
+//            DebugHelper.out("Result: " + api.getTaskSolution().getCellNumbers(), DebugHelper.Type.SUCCESS);
         return api.getTaskSolution().getCellNumbers();
     }
 
@@ -218,7 +131,6 @@ public class AnticaptchaTask {
      *                         Make sure to grab fresh one for each captcha,
      *                         otherwise you will be charged for error task.
      * @return Solution
-     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
      * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/416972814/GeeTestTaskProxyless+-+captcha+from+geetest.com+without+proxy">https://anticaptcha.atlassian.net</a>
      */
     public static TaskResultResponse.SolutionData solveGeeTestProxyless(URL website, String websiteKey, String websiteChallenge) throws InterruptedException {
@@ -229,18 +141,10 @@ public class AnticaptchaTask {
         // you need to get a new "challenge" each time
         api.setWebsiteChallenge(websiteChallenge);
 
-        if (!api.createTask()) {
-            DebugHelper.out(
-                    "API v2 send failed. " + api.getErrorMessage(),
-                    DebugHelper.Type.ERROR
-            );
-        } else if (!api.waitForResult()) {
-            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
-        } else {
-            DebugHelper.out("Result CHALLENGE: " + api.getTaskSolution().getChallenge(), DebugHelper.Type.SUCCESS);
-            DebugHelper.out("Result SECCODE: " + api.getTaskSolution().getSeccode(), DebugHelper.Type.SUCCESS);
-            DebugHelper.out("Result VALIDATE: " + api.getTaskSolution().getValidate(), DebugHelper.Type.SUCCESS);
-        }
+        // TODO: 21.10.2020: p.sakharchuk: Need to add logger
+//            DebugHelper.out("Result CHALLENGE: " + api.getTaskSolution().getChallenge(), DebugHelper.Type.SUCCESS);
+//            DebugHelper.out("Result SECCODE: " + api.getTaskSolution().getSeccode(), DebugHelper.Type.SUCCESS);
+//            DebugHelper.out("Result VALIDATE: " + api.getTaskSolution().getValidate(), DebugHelper.Type.SUCCESS);
         return api.getTaskSolution();
     }
 
@@ -254,7 +158,6 @@ public class AnticaptchaTask {
      * @param website    Address of target web page
      * @param websiteKey The domain key
      * @return Solution
-     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
      * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/834502676/HCaptchaTaskProxyless+hCaptcha+puzzle+solving+without+proxy">https://anticaptcha.atlassian.net</a>
      */
     public static TaskResultResponse.SolutionData solveHCaptchaProxyless(URL website, String websiteKey) throws InterruptedException {
@@ -262,16 +165,8 @@ public class AnticaptchaTask {
         api.setWebsiteUrl(website);
         api.setWebsiteKey(websiteKey);
 
-        if (!api.createTask()) {
-            DebugHelper.out(
-                    "API v2 send failed. " + api.getErrorMessage(),
-                    DebugHelper.Type.ERROR
-            );
-        } else if (!api.waitForResult()) {
-            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
-        } else {
-            DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
-        }
+        // TODO: 21.10.2020: p.sakharchuk: Need to add logger
+//            DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
         return api.getTaskSolution();
     }
 
@@ -285,7 +180,6 @@ public class AnticaptchaTask {
      * @param imageUrl   Address of an image
      * @param formJson   Custom form object. It can be or JSON-object
      * @return Solution
-     * @throws InterruptedException for {@link AnticaptchaAbstract#waitForResult()}
      * @see <a href="https://developer.aliyun.com/mirror/npm/package/anticaptcha2">https://developer.aliyun.com</a>
      */
     public static TaskResultResponse.SolutionData solveCustomCaptcha(String assignment, String imageUrl, JSONArray formJson) throws InterruptedException {
@@ -294,27 +188,19 @@ public class AnticaptchaTask {
         api.setAssignment(assignment);
         api.setForms(formJson);
 
-        if (!api.createTask()) {
-            DebugHelper.out(
-                    "API v2 send failed. " + api.getErrorMessage(),
-                    DebugHelper.Type.ERROR
-            );
-        } else if (!api.waitForResult()) {
-            DebugHelper.out("Could not solve the captcha.", DebugHelper.Type.ERROR);
-        } else {
-            JSONObject answers = api.getTaskSolution().getAnswers();
-            Iterator<?> keys = answers.keys();
-
-            while (keys.hasNext()) {
-                String question = (String) keys.next();
-                String answer = answers.getString(question);
-
-                DebugHelper.out(
-                        "The answer for the question '" + question + "' : " + answer,
-                        DebugHelper.Type.SUCCESS
-                );
-            }
-        }
+        // TODO: 21.10.2020: p.sakharchuk: Need to add logger
+//            JSONObject answers = api.getTaskSolution().getAnswers();
+//            Iterator<?> keys = answers.keys();
+//
+//            while (keys.hasNext()) {
+//                String question = (String) keys.next();
+//                String answer = answers.getString(question);
+//
+//                DebugHelper.out(
+//                        "The answer for the question '" + question + "' : " + answer,
+//                        DebugHelper.Type.SUCCESS
+//                );
+//            }
         return api.getTaskSolution();
     }
 }
