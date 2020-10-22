@@ -5,6 +5,7 @@ import com.anticaptcha.api.TaskType;
 import com.anticaptcha.helper.DebugHelper;
 import com.anticaptcha.helper.StringHelper;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,6 +18,7 @@ import java.net.URL;
  * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/5079091/ImageToTextTask+solve+usual+image+captcha">https://anticaptcha.atlassian.net</a>
  */
 @Setter
+@Accessors(chain = true)
 public class ImageToText extends AnticaptchaAbstract {
     /**
      * Defines type of the task.

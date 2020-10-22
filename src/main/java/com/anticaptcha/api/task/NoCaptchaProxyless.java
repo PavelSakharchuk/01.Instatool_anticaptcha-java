@@ -4,6 +4,7 @@ import com.anticaptcha.api.AnticaptchaAbstract;
 import com.anticaptcha.api.TaskType;
 import com.anticaptcha.helper.DebugHelper;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,6 +23,7 @@ import java.net.URL;
  * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/9666606/NoCaptchaTaskProxyless+Google+Recaptcha+puzzle+solving+without+proxies">https://anticaptcha.atlassian.net</a>
  */
 @Setter
+@Accessors(chain = true)
 public class NoCaptchaProxyless extends AnticaptchaAbstract {
     /**
      * Defines type of the task.

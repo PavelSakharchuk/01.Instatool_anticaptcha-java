@@ -44,7 +44,8 @@ class AntiCaptchaTaskTest {
         String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
         Proxy proxy = new Proxy();
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveNoCaptcha(websiteUrl, websiteKey, proxy);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveNoCaptcha(websiteUrl, websiteKey, proxy)
+                .getTaskSolution();
 
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
     }
@@ -54,7 +55,8 @@ class AntiCaptchaTaskTest {
         URL websiteUrl = new URL("http://http.myjino.ru/recaptcha/test-get.php");
         String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveNoCaptchaProxyless(websiteUrl, websiteKey);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveNoCaptchaProxyless(websiteUrl, websiteKey)
+                .getTaskSolution();
 
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
     }
@@ -63,9 +65,9 @@ class AntiCaptchaTaskTest {
     void recaptchaV3ProxylessTest() throws InterruptedException, MalformedURLException {
         URL websiteUrl = new URL("http://http.myjino.ru/recaptcha/test-get.php");
         String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
-        String pageAction = "testPageAction";
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveRecaptchaV3Proxyless(websiteUrl, websiteKey, pageAction);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveRecaptchaV3Proxyless(websiteUrl, websiteKey)
+                .getTaskSolution();
 
         Assertions.assertNotNull(solution);
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
