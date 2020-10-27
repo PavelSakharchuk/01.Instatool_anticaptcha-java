@@ -2,6 +2,7 @@ package com.anticaptcha;
 
 import com.anticaptcha.api.task.CustomCaptcha;
 import com.anticaptcha.api.task.FunCaptcha;
+import com.anticaptcha.api.task.FunCaptchaProxyless;
 import com.anticaptcha.api.task.GeeTestProxyless;
 import com.anticaptcha.api.task.HCaptchaProxyless;
 import com.anticaptcha.api.task.ImageToText;
@@ -28,52 +29,34 @@ public class AnticaptchaTask {
         return new ImageToText(captchaImageFile);
     }
 
-    public static NoCaptcha solveNoCaptcha(URL website, String websiteKey, Proxy proxy) {
+    public static NoCaptcha noCaptcha(URL website, String websiteKey, Proxy proxy) {
         // TODO: 21.10.2020: p.sakharchuk: Need to add logger
 //        DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
         return new NoCaptcha(website, websiteKey, proxy);
     }
 
-    public static NoCaptchaProxyless solveNoCaptchaProxyless(URL website, String websiteKey) {
+    public static NoCaptchaProxyless noCaptchaProxyless(URL website, String websiteKey) {
         // TODO: 21.10.2020: p.sakharchuk: Need to add logger
 //        DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
         return new NoCaptchaProxyless(website, websiteKey);
     }
 
-
-    public static RecaptchaV3Proxyless solveRecaptchaV3Proxyless(URL website, String websiteKey) {
+    public static RecaptchaV3Proxyless recaptchaV3Proxyless(URL website, String websiteKey) {
         // TODO: 21.10.2020: p.sakharchuk: Need to add logger
 //            DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
         return new RecaptchaV3Proxyless(website, websiteKey);
     }
 
-    /**
-     * <h2>FunCaptchaTask - rotating captcha funcaptcha.com</h2>
-     * <p>
-     * This type of task solves funcaptcha.com puzzle in our workers browsers.
-     * Your app submits website address, public key and receives submit token after task completion.
-     *
-     * @param website    Address of target web page
-     * @param websiteKey Recaptcha website key
-     * @param proxy      Proxy object with type, address, port, login, password and User-Agent
-     * @return solution
-     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/65634347/FunCaptchaTask+-+rotating+captcha+funcaptcha.com">https://anticaptcha.atlassian.net</a>
-     */
-    public static TaskResultResponse.SolutionData solveFuncaptcha(URL website, String websiteKey, Proxy proxy) {
-        FunCaptcha api = new FunCaptcha();
-        api.setWebsiteUrl(website);
-        api.setWebsitePublicKey(websiteKey);
-
-        api.setUserAgent(proxy.getUserAgent());
-        api.setProxyType(proxy.getProxyType());
-        api.setProxyAddress(proxy.getProxyAddress());
-        api.setProxyPort(proxy.getProxyPort());
-        api.setProxyLogin(proxy.getProxyLogin());
-        api.setProxyPassword(proxy.getProxyPassword());
-
+    public static FunCaptcha funCaptcha(URL website, String websitePublicKey, Proxy proxy) {
         // TODO: 21.10.2020: p.sakharchuk: Need to add logger
 //            DebugHelper.out("Result: " + api.getTaskSolution().getToken(), DebugHelper.Type.SUCCESS);
-        return api.getTaskSolution();
+        return new FunCaptcha(website, websitePublicKey, proxy);
+    }
+
+    public static FunCaptchaProxyless funCaptchaProxyless(URL website, String websitePublicKey) {
+        // TODO: 21.10.2020: p.sakharchuk: Need to add logger
+//            DebugHelper.out("Result: " + api.getTaskSolution().getToken(), DebugHelper.Type.SUCCESS);
+        return new FunCaptchaProxyless(website, websitePublicKey);
     }
 
     /**

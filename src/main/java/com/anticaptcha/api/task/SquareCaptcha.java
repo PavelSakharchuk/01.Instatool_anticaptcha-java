@@ -18,12 +18,11 @@ public class SquareCaptcha extends AnticaptchaAbstract implements IAnticaptchaTa
 
     @Override
     public JSONObject getPostData() {
+        JSONObject postData = new JSONObject();
 
         if (bodyBase64 == null || bodyBase64.length() == 0) {
             return null;
         }
-
-        JSONObject postData = new JSONObject();
 
         try {
             postData.put("type", "SquareNetTask");
@@ -33,10 +32,8 @@ public class SquareCaptcha extends AnticaptchaAbstract implements IAnticaptchaTa
             postData.put("columnsCount", columnsCount);
         } catch (JSONException e) {
             DebugHelper.out("JSON compilation error: " + e.getMessage(), DebugHelper.Type.ERROR);
-
             return null;
         }
-
         return postData;
     }
 

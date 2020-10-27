@@ -44,7 +44,7 @@ class AntiCaptchaTaskTest {
         String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
         Proxy proxy = new Proxy();
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveNoCaptcha(websiteUrl, websiteKey, proxy)
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.noCaptcha(websiteUrl, websiteKey, proxy)
                 .getTaskSolution();
 
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
@@ -55,7 +55,7 @@ class AntiCaptchaTaskTest {
         URL websiteUrl = new URL("http://http.myjino.ru/recaptcha/test-get.php");
         String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveNoCaptchaProxyless(websiteUrl, websiteKey)
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.noCaptchaProxyless(websiteUrl, websiteKey)
                 .getTaskSolution();
 
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
@@ -66,7 +66,7 @@ class AntiCaptchaTaskTest {
         URL websiteUrl = new URL("http://http.myjino.ru/recaptcha/test-get.php");
         String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveRecaptchaV3Proxyless(websiteUrl, websiteKey)
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.recaptchaV3Proxyless(websiteUrl, websiteKey)
                 .getTaskSolution();
 
         Assertions.assertNotNull(solution);
@@ -74,12 +74,24 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void funcaptchaTest() throws InterruptedException, MalformedURLException {
+    void funCaptchaTest() throws InterruptedException, MalformedURLException {
         URL websiteUrl = new URL("http://http.myjino.ru/funcaptcha_test/");
-        String websiteKey = "DE0B0BB7-1EE4-4D70-1853-31B835D4506B";
+        String websitePublicKey = "DE0B0BB7-1EE4-4D70-1853-31B835D4506B";
         Proxy proxy = new Proxy();
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveFuncaptcha(websiteUrl, websiteKey, proxy);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.funCaptcha(websiteUrl, websitePublicKey, proxy)
+                .getTaskSolution();
+
+        Assertions.assertNotNull(solution.getGRecaptchaResponse());
+    }
+
+    @Test
+    void funCaptchaProxylessTest() throws InterruptedException, MalformedURLException {
+        URL websiteUrl = new URL("http://http.myjino.ru/funcaptcha_test/");
+        String websitePublicKey = "DE0B0BB7-1EE4-4D70-1853-31B835D4506B";
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.funCaptchaProxyless(websiteUrl, websitePublicKey)
+                .getTaskSolution();
 
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
     }

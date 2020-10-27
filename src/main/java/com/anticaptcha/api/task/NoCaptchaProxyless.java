@@ -74,7 +74,6 @@ public class NoCaptchaProxyless extends AnticaptchaAbstract {
     @Override
     public JSONObject getPostData() {
         JSONObject postData = new JSONObject();
-
         try {
             postData.put("type", type);
             postData.put("websiteURL", websiteUrl);
@@ -84,10 +83,8 @@ public class NoCaptchaProxyless extends AnticaptchaAbstract {
             postData.put("isInvisible", isInvisible);
         } catch (JSONException e) {
             DebugHelper.out("JSON compilation error: " + e.getMessage(), DebugHelper.Type.ERROR);
-
             return null;
         }
-
         return postData;
     }
 }

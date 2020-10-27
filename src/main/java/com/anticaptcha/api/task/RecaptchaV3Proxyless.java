@@ -72,7 +72,6 @@ public class RecaptchaV3Proxyless extends AnticaptchaAbstract {
     @Override
     public JSONObject getPostData() {
         JSONObject postData = new JSONObject();
-
         try {
             postData.put("type", type);
             postData.put("websiteURL", websiteUrl);
@@ -81,10 +80,8 @@ public class RecaptchaV3Proxyless extends AnticaptchaAbstract {
             postData.put("pageAction", pageAction);
         } catch (JSONException e) {
             DebugHelper.out("JSON compilation error: " + e.getMessage(), DebugHelper.Type.ERROR);
-
             return null;
         }
-
         return postData;
     }
 }

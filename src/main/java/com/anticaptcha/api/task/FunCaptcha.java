@@ -1,64 +1,97 @@
 package com.anticaptcha.api.task;
 
-import com.anticaptcha.api.AnticaptchaAbstract;
-import com.anticaptcha.api.IAnticaptchaTaskProtocol;
-import com.anticaptcha.apiresponse.TaskResultResponse;
+import com.anticaptcha.api.TaskType;
 import com.anticaptcha.helper.DebugHelper;
+import com.anticaptcha.http.Proxy;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
 
-public class FunCaptcha extends AnticaptchaAbstract implements IAnticaptchaTaskProtocol {
+/**
+ * <h2>FunCaptchaTask - rotating captcha funcaptcha.com</h2>
+ * <p>
+ * This type of task solves funcaptcha.com puzzle in our workers browsers.
+ * Your app submits website address, public key and receives submit token after task completion.
+ *
+ * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/65634347/FunCaptchaTask+-+rotating+captcha+funcaptcha.com">https://anticaptcha.atlassian.net</a>
+ */
+@Setter
+@Accessors(chain = true)
+public class FunCaptcha extends FunCaptchaProxyless {
+    /**
+     * Defines type of the task.
+     */
+    private final String type = TaskType.FUN_CAPTCHA_TASK.getType();
+    /**
+     * Type of the proxy
+     * <p>
+     * http - usual http/https proxy
+     * https - try this only if "http" doesn't work (required by some custom proxy servers)
+     * socks4 - socks4 proxy
+     * socks5 - socks5 proxy
+     */
+    private final String proxyType;
+    /**
+     * Proxy IP address ipv4/ipv6. Not allowed to use:
+     * <p>
+     * - host names instead of IPs
+     * - transparent proxies (where client IP is visible)
+     * - proxies from local networks (192.., 10.., 127...)
+     */
+    private final String proxyAddress;
+    /**
+     * Proxy port
+     */
+    private final Integer proxyPort;
+    /**
+     * Browser's User-Agent which is used in emulation.
+     * It is required that you use a signature of a modern browser,
+     * otherwise Google will ask you to "update your browser".
+     */
+    private final String userAgent;
+    /**
+     * Login for proxy which requires authorizaiton (basic)
+     */
     private String proxyLogin;
+    /**
+     * Proxy password
+     */
     private String proxyPassword;
-    private Integer proxyPort;
-    private ProxyTypeOption proxyType;
-    private String userAgent;
-    private String proxyAddress;
-    private URL websiteUrl;
-    private String websitePublicKey;
+    /**
+     * Additional cookies which we must use during interaction with target page or Google.
+     * Format: cookiename1=cookievalue1; cookiename2=cookievalue2
+     */
+    private String cookies;
 
-    public void setProxyLogin(String proxyLogin) {
-        this.proxyLogin = proxyLogin;
+
+    public FunCaptcha(URL websiteUrl, String websitePublicKey, Proxy proxy) {
+        super(websiteUrl, websitePublicKey);
+        this.proxyType = proxy.getProxyType().toString().toLowerCase();
+        this.proxyAddress = proxy.getProxyAddress();
+        this.proxyPort = proxy.getProxyPort();
+        this.userAgent = proxy.getUserAgent();
+
+        this.proxyLogin = proxy.getProxyLogin();
+        this.proxyPassword = proxy.getProxyPassword();
     }
 
-    public void setProxyPassword(String proxyPassword) {
-        this.proxyPassword = proxyPassword;
-    }
-
-    public void setProxyPort(Integer proxyPort) {
-        this.proxyPort = proxyPort;
-    }
-
-    public void setProxyType(ProxyTypeOption proxyType) {
-        this.proxyType = proxyType;
-    }
-
-    public void setUserAgent(String userAgent) {
-        this.userAgent = userAgent;
-    }
-
-    public void setProxyAddress(String proxyAddress) {
-        this.proxyAddress = proxyAddress;
-    }
 
     @Override
     public JSONObject getPostData() {
-        JSONObject postData = new JSONObject();
+        JSONObject postData = super.getPostData();
 
         if (proxyType == null || proxyPort == null || proxyPort < 1 || proxyPort > 65535
                 || proxyAddress == null || proxyAddress.length() == 0) {
             DebugHelper.out("Proxy data is incorrect!", DebugHelper.Type.ERROR);
-
             return null;
         }
 
         try {
-            postData.put("type", "FunCaptchaTask");
-            postData.put("websiteURL", websiteUrl);
-            postData.put("websitePublicKey", websitePublicKey);
-            postData.put("proxyType", proxyType.toString().toLowerCase());
+            postData.put("type", type);
+            postData.put("proxyType", proxyType.toLowerCase());
             postData.put("proxyAddress", proxyAddress);
             postData.put("proxyPort", proxyPort);
             postData.put("proxyLogin", proxyLogin);
@@ -66,23 +99,8 @@ public class FunCaptcha extends AnticaptchaAbstract implements IAnticaptchaTaskP
             postData.put("userAgent", userAgent);
         } catch (JSONException e) {
             DebugHelper.out("JSON compilation error: " + e.getMessage(), DebugHelper.Type.ERROR);
-
             return null;
         }
-
         return postData;
-    }
-
-    @Override
-    public TaskResultResponse.SolutionData getTaskSolution() {
-        return taskInfo.getSolution();
-    }
-
-    public void setWebsiteUrl(URL websiteUrl) {
-        this.websiteUrl = websiteUrl;
-    }
-
-    public void setWebsitePublicKey(String websitePublicKey) {
-        this.websitePublicKey = websitePublicKey;
     }
 }

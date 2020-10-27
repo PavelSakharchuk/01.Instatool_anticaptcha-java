@@ -87,7 +87,6 @@ public class NoCaptcha extends NoCaptchaProxyless {
         if (proxyType == null || proxyPort == null || proxyPort < 1 || proxyPort > 65535
                 || proxyAddress == null || proxyAddress.length() == 0) {
             DebugHelper.out("Proxy data is incorrect!", DebugHelper.Type.ERROR);
-
             return null;
         }
 
@@ -102,10 +101,8 @@ public class NoCaptcha extends NoCaptchaProxyless {
             postData.put("cookies", cookies);
         } catch (JSONException e) {
             DebugHelper.out("JSON compilation error: " + e.getMessage(), DebugHelper.Type.ERROR);
-
             return null;
         }
-
         return postData;
     }
 }
