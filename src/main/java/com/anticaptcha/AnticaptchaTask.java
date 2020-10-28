@@ -16,7 +16,6 @@ import org.json.JSONArray;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 
 public class AnticaptchaTask {
 
@@ -59,30 +58,16 @@ public class AnticaptchaTask {
         return new FunCaptchaProxyless(website, websitePublicKey);
     }
 
-    /**
-     * <h2>SquareNetTextTask : select objects on image with an overlay grid</h2>
-     * <p>
-     * This type of tasks takes your image, adds custom grid on it
-     * and asks our worker to mark specified objects on it.
-     *
-     * @param squareFile File image captcha
-     * @param objectName Name of the object. Example: banana
-     * @param columns    Number of grid columns. Min 2, max 5
-     * @param rows       Number of grid rows. Min 2, max 5
-     * @return Solution
-     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/410517505/SquareNetTextTask+select+objects+on+image+with+an+overlay+grid">https://anticaptcha.atlassian.net</a>
-     */
-    public static List<Integer> solveSquareNet(File squareFile, String objectName, int columns, int rows) {
-        SquareCaptcha api = new SquareCaptcha();
-        // TODO: 12.10.2020: p.sakharchuk: Implement SquareObject
-        api.setFile(squareFile);
-        api.setObjectName(objectName);
-        api.setColumnsCount(columns);
-        api.setRowsCount(rows);
-
+    public static SquareCaptcha squareNet(File squareFile, String objectName) {
         // TODO: 21.10.2020: p.sakharchuk: Need to add logger
 //            DebugHelper.out("Result: " + api.getTaskSolution().getCellNumbers(), DebugHelper.Type.SUCCESS);
-        return api.getTaskSolution().getCellNumbers();
+        return new SquareCaptcha(squareFile, objectName);
+    }
+
+    public static SquareCaptcha squareNet(File squareFile, String objectName, Integer rowsCount, Integer columnsCount) {
+        // TODO: 21.10.2020: p.sakharchuk: Need to add logger
+//            DebugHelper.out("Result: " + api.getTaskSolution().getCellNumbers(), DebugHelper.Type.SUCCESS);
+        return new SquareCaptcha(squareFile, objectName, rowsCount, columnsCount);
     }
 
     /**

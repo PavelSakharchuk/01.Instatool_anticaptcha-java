@@ -97,6 +97,7 @@ public class FunCaptcha extends FunCaptchaProxyless {
             postData.put("proxyLogin", proxyLogin);
             postData.put("proxyPassword", proxyPassword);
             postData.put("userAgent", userAgent);
+            postData.put("cookies", cookies);
         } catch (JSONException e) {
             DebugHelper.out("JSON compilation error: " + e.getMessage(), DebugHelper.Type.ERROR);
             return null;

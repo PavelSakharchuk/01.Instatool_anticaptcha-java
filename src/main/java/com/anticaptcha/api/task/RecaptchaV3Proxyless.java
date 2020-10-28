@@ -54,9 +54,7 @@ public class RecaptchaV3Proxyless extends AnticaptchaAbstract {
 
 
     public RecaptchaV3Proxyless(URL websiteUrl, String websiteKey) {
-        this.websiteUrl = websiteUrl.toString();
-        this.websiteKey = websiteKey;
-        this.minScore = 0.3;
+        this(websiteUrl, websiteKey, 0.3);
     }
 
     public RecaptchaV3Proxyless(URL websiteUrl, String websiteKey, Double minScore) {

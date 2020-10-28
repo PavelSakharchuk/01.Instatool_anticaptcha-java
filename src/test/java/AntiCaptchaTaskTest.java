@@ -100,12 +100,15 @@ class AntiCaptchaTaskTest {
     void squareNetTest() throws InterruptedException, URISyntaxException {
         File squareFile = FileHelper.getFileFromResource("square.jpg");
         String objectName = "FISH / РЫБА";
-        int columns = 4;
         int rows = 4;
+        int columns = 4;
 
         List<Integer> expectedCaptchaResult = Arrays.asList(2);
 
-        List<Integer> answerList = AnticaptchaTask.solveSquareNet(squareFile, objectName, columns, rows);
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.squareNet(squareFile, objectName, rows, columns)
+                .getTaskSolution();
+        List<Integer> answerList = solution.getCellNumbers();
 
         Assertions.assertTrue(answerList.containsAll(expectedCaptchaResult)
                         && answerList.size() == expectedCaptchaResult.size(),
