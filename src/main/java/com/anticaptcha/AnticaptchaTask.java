@@ -3,6 +3,7 @@ package com.anticaptcha;
 import com.anticaptcha.api.task.CustomCaptcha;
 import com.anticaptcha.api.task.FunCaptcha;
 import com.anticaptcha.api.task.FunCaptchaProxyless;
+import com.anticaptcha.api.task.GeeTest;
 import com.anticaptcha.api.task.GeeTestProxyless;
 import com.anticaptcha.api.task.HCaptchaProxyless;
 import com.anticaptcha.api.task.ImageToText;
@@ -70,33 +71,20 @@ public class AnticaptchaTask {
         return new SquareCaptcha(squareFile, objectName, rowsCount, columnsCount);
     }
 
-    /**
-     * <h2>GeeTestTaskProxyless - captcha from geetest.com without proxy</h2>
-     * <p>
-     * This type of task solves GeeTest captcha in our workers browsers.
-     * Your app submits website address, gt key, challenge key and receives 3 parameters after task completion.
-     *
-     * @param website          Address of target web page
-     * @param websiteKey       The domain key
-     * @param websiteChallenge Changing token key.
-     *                         Make sure to grab fresh one for each captcha,
-     *                         otherwise you will be charged for error task.
-     * @return Solution
-     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/416972814/GeeTestTaskProxyless+-+captcha+from+geetest.com+without+proxy">https://anticaptcha.atlassian.net</a>
-     */
-    public static TaskResultResponse.SolutionData solveGeeTestProxyless(URL website, String websiteKey, String websiteChallenge) {
-        GeeTestProxyless api = new GeeTestProxyless();
-        api.setWebsiteUrl(website);
-        api.setWebsiteKey(websiteKey);
-        // "challenge" for testing you can get here: https://www.binance.com/security/getGtCode.html?t=1561554068768
-        // you need to get a new "challenge" each time
-        api.setWebsiteChallenge(websiteChallenge);
-
+    public static GeeTest geeTest(URL website, String gt, String challenge, Proxy proxy) {
         // TODO: 21.10.2020: p.sakharchuk: Need to add logger
 //            DebugHelper.out("Result CHALLENGE: " + api.getTaskSolution().getChallenge(), DebugHelper.Type.SUCCESS);
 //            DebugHelper.out("Result SECCODE: " + api.getTaskSolution().getSeccode(), DebugHelper.Type.SUCCESS);
 //            DebugHelper.out("Result VALIDATE: " + api.getTaskSolution().getValidate(), DebugHelper.Type.SUCCESS);
-        return api.getTaskSolution();
+        return new GeeTest(website, gt, challenge, proxy);
+    }
+
+    public static GeeTestProxyless geeTestProxyless(URL website, String gt, String challenge) {
+        // TODO: 21.10.2020: p.sakharchuk: Need to add logger
+//            DebugHelper.out("Result CHALLENGE: " + api.getTaskSolution().getChallenge(), DebugHelper.Type.SUCCESS);
+//            DebugHelper.out("Result SECCODE: " + api.getTaskSolution().getSeccode(), DebugHelper.Type.SUCCESS);
+//            DebugHelper.out("Result VALIDATE: " + api.getTaskSolution().getValidate(), DebugHelper.Type.SUCCESS);
+        return new GeeTestProxyless(website, gt, challenge);
     }
 
     /**

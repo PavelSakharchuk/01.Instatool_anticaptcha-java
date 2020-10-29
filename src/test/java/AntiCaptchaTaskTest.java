@@ -116,12 +116,30 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
+    void geeTestTest() throws InterruptedException, MalformedURLException {
+        URL websiteUrl = new URL("https://auth.geetest.com/");
+        String websiteKey = "b6e21f90a91a3c2d4a31fe84e10d0442";
+        // "challenge" for testing you can get here: https://www.binance.com/security/getGtCode.html?t=1561554068768
+        // you need to get a new "challenge" each time
+        String websiteChallenge = "cd0b3b5c33fb951ab364d9e13ccd7bf8";
+        Proxy proxy = new Proxy();
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.geeTest(websiteUrl, websiteKey, websiteChallenge, proxy)
+                .getTaskSolution();
+
+        Assertions.assertNotNull(solution.getGRecaptchaResponse());
+    }
+
+    @Test
     void geeTestProxylessTest() throws InterruptedException, MalformedURLException {
         URL websiteUrl = new URL("https://auth.geetest.com/");
         String websiteKey = "b6e21f90a91a3c2d4a31fe84e10d0442";
+        // "challenge" for testing you can get here: https://www.binance.com/security/getGtCode.html?t=1561554068768
+        // you need to get a new "challenge" each time
         String websiteChallenge = "cd0b3b5c33fb951ab364d9e13ccd7bf8";
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveGeeTestProxyless(websiteUrl, websiteKey, websiteChallenge);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.geeTestProxyless(websiteUrl, websiteKey, websiteChallenge)
+                .getTaskSolution();
 
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
     }
