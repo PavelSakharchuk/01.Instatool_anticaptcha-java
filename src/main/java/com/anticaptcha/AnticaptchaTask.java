@@ -5,6 +5,7 @@ import com.anticaptcha.api.task.FunCaptcha;
 import com.anticaptcha.api.task.FunCaptchaProxyless;
 import com.anticaptcha.api.task.GeeTest;
 import com.anticaptcha.api.task.GeeTestProxyless;
+import com.anticaptcha.api.task.HCaptcha;
 import com.anticaptcha.api.task.HCaptchaProxyless;
 import com.anticaptcha.api.task.ImageToText;
 import com.anticaptcha.api.task.NoCaptcha;
@@ -87,26 +88,16 @@ public class AnticaptchaTask {
         return new GeeTestProxyless(website, gt, challenge);
     }
 
-    /**
-     * <h2>HCaptchaTaskProxyless : hCaptcha puzzle solving without proxy</h2>
-     * <p>
-     * HCaptcha devs call their captcha "a drop-in replacement for Recaptcha".
-     * We tried to create same thing in our API,
-     * so task properties are absolutely the same except type.
-     *
-     * @param website    Address of target web page
-     * @param websiteKey The domain key
-     * @return Solution
-     * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/834502676/HCaptchaTaskProxyless+hCaptcha+puzzle+solving+without+proxy">https://anticaptcha.atlassian.net</a>
-     */
-    public static TaskResultResponse.SolutionData solveHCaptchaProxyless(URL website, String websiteKey) {
-        HCaptchaProxyless api = new HCaptchaProxyless();
-        api.setWebsiteUrl(website);
-        api.setWebsiteKey(websiteKey);
-
+    public static HCaptcha hCaptcha(URL website, String websiteKey, Proxy proxy) {
         // TODO: 21.10.2020: p.sakharchuk: Need to add logger
 //            DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
-        return api.getTaskSolution();
+        return new HCaptcha(website, websiteKey, proxy);
+    }
+
+    public static HCaptchaProxyless hCaptchaProxyless(URL website, String websiteKey) {
+        // TODO: 21.10.2020: p.sakharchuk: Need to add logger
+//            DebugHelper.out("Result: " + api.getTaskSolution().getGRecaptchaResponse(), DebugHelper.Type.SUCCESS);
+        return new HCaptchaProxyless(website, websiteKey);
     }
 
     /**

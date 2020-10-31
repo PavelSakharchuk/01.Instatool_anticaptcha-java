@@ -145,11 +145,24 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
+    void hCaptchaTest() throws InterruptedException, MalformedURLException {
+        URL websiteUrl = new URL("http://democaptcha.com/");
+        String websiteKey = "51829642-2cda-4b09-896c-594f89d700cc";
+        Proxy proxy = new Proxy();
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.hCaptcha(websiteUrl, websiteKey, proxy)
+                .getTaskSolution();
+
+        Assertions.assertNotNull(solution.getGRecaptchaResponse());
+    }
+
+    @Test
     void hCaptchaProxylessTest() throws InterruptedException, MalformedURLException {
         URL websiteUrl = new URL("http://democaptcha.com/");
         String websiteKey = "51829642-2cda-4b09-896c-594f89d700cc";
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveHCaptchaProxyless(websiteUrl, websiteKey);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.hCaptchaProxyless(websiteUrl, websiteKey)
+                .getTaskSolution();
 
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
     }
