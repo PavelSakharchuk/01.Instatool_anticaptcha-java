@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import java.net.URL;
 
 /**
- * <h2>NoCaptchaTask : Google Recaptcha puzzle solving</h2>
+ * <h2>NoCaptchaTask: Google Recaptcha puzzle solving</h2>
  * <p>
  * This object of type Task contains data required to solve Google Recaptcha on a worker's computer.
  * To provide solid universality for solving this type of task

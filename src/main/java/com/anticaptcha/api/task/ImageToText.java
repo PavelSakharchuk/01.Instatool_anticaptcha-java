@@ -13,7 +13,7 @@ import java.io.File;
 import java.net.URL;
 
 /**
- * <h2>ImageToTextTask : solve usual image captcha</h2>
+ * <h2>ImageToTextTask: solve usual image captcha</h2>
  *
  * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/5079091/ImageToTextTask+solve+usual+image+captcha">https://anticaptcha.atlassian.net</a>
  */

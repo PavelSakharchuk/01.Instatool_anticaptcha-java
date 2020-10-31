@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import java.io.File;
 
 /**
- * <h2>SquareNetTextTask : select objects on image with an overlay grid</h2>
+ * <h2>SquareNetTextTask: select objects on image with an overlay grid</h2>
  * <p>
  * This type of tasks takes your image, adds custom grid on it
  * and asks our worker to mark specified objects on it.

@@ -3,13 +3,15 @@ package com.anticaptcha.api.task;
 import com.anticaptcha.api.TaskType;
 import com.anticaptcha.helper.DebugHelper;
 import com.anticaptcha.http.Proxy;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
 
 /**
- * <h2>HCaptchaTask : hCaptcha puzzle solving</h2>
+ * <h2>HCaptchaTask: hCaptcha puzzle solving</h2>
  * <p>
  * hCaptcha devs call their captcha "a drop-in replacement for Recaptcha".
  * We tried to create same thing in our API,
@@ -19,6 +21,8 @@ import java.net.URL;
  *
  * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/834502657/HCaptchaTask+hCaptcha+puzzle+solving">https://anticaptcha.atlassian.net</a>
  */
+@Setter
+@Accessors(chain = true)
 public class HCaptcha extends HCaptchaProxyless {
     /**
      * Defines type of the task.

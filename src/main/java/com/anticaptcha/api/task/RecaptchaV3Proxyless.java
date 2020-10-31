@@ -12,7 +12,7 @@ import java.net.URL;
 import java.util.Arrays;
 
 /**
- * <h2>NoCaptchaTaskProxyless : Google Recaptcha puzzle solving without proxies</h2>
+ * <h2>NoCaptchaTaskProxyless: Google Recaptcha puzzle solving without proxies</h2>
  * <p>
  * This object of type Task contains data required to solve Google Recaptcha on a worker's computer.
  * This task will be executed by our service using our own proxy servers and/or workers' IP addresses.

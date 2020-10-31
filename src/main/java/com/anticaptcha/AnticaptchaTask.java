@@ -12,9 +12,7 @@ import com.anticaptcha.api.task.NoCaptcha;
 import com.anticaptcha.api.task.NoCaptchaProxyless;
 import com.anticaptcha.api.task.RecaptchaV3Proxyless;
 import com.anticaptcha.api.task.SquareCaptcha;
-import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.http.Proxy;
-import org.json.JSONArray;
 
 import java.io.File;
 import java.net.URL;
@@ -100,24 +98,8 @@ public class AnticaptchaTask {
         return new HCaptchaProxyless(website, websiteKey);
     }
 
-    /**
-     * <h2>HCaptchaTaskProxyless : hCaptcha puzzle solving without proxy</h2>
-     * <p>
-     * This type of tasks is suitable for use when you need to describe what is on an image
-     * and you need workers to fill a custom form for this.
-     *
-     * @param assignment Describe what worker must do in English
-     * @param imageUrl   Address of an image
-     * @param formJson   Custom form object. It can be or JSON-object
-     * @return Solution
-     * @see <a href="https://developer.aliyun.com/mirror/npm/package/anticaptcha2">https://developer.aliyun.com</a>
-     */
-    public static TaskResultResponse.SolutionData solveCustomCaptcha(String assignment, String imageUrl, JSONArray formJson) {
-        CustomCaptcha api = new CustomCaptcha();
-        api.setImageUrl(imageUrl);
-        api.setAssignment(assignment);
-        api.setForms(formJson);
 
+    public static CustomCaptcha customCaptcha(URL imageUrl) {
         // TODO: 21.10.2020: p.sakharchuk: Need to add logger
 //            JSONObject answers = api.getTaskSolution().getAnswers();
 //            Iterator<?> keys = answers.keys();
@@ -131,6 +113,6 @@ public class AnticaptchaTask {
 //                        DebugHelper.Type.SUCCESS
 //                );
 //            }
-        return api.getTaskSolution();
+        return new CustomCaptcha(imageUrl);
     }
 }

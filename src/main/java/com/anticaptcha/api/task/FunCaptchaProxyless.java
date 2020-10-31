@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import java.net.URL;
 
 /**
- * <h2>FunCaptchaTaskProxyless - funcaptcha without proxy</h2>
+ * <h2>FunCaptchaTaskProxyless: funcaptcha without proxy</h2>
  * <p>
  * This type of task solves funcaptcha.com puzzle in our workers browsers.
  * Your app submits website address, public key and receives submit token after task completion.

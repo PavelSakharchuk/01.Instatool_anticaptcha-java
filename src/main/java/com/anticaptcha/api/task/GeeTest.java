@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import java.net.URL;
 
 /**
- * <h2>GeeTestTask - captcha from geetest.com</h2>
+ * <h2>GeeTestTask: captcha from geetest.com</h2>
  * <p>
  * This type of task solves GeeTest captcha in our workers browsers.
  * Your app submits website address, gt key, challenge key and receives 3 parameters after task completion.

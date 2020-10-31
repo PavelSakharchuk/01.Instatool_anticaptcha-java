@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import java.net.URL;
 
 /**
- * <h2>HCaptchaTaskProxyless : hCaptcha puzzle solving without proxy</h2>
+ * <h2>HCaptchaTaskProxyless: hCaptcha puzzle solving without proxy</h2>
  * <p>
  * HCaptcha devs call their captcha "a drop-in replacement for Recaptcha".
  * We tried to create same thing in our API,

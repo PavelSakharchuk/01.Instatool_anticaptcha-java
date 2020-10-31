@@ -168,8 +168,12 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void customCaptchaTest() throws InterruptedException {
+    void customCaptchaTest() throws InterruptedException, MalformedURLException {
         String expectedLicensePlate = "TONFNTI";
+
+        int randInt = ThreadLocalRandom.current().nextInt(0, 10000);
+        URL imageUrl = new URL("https://files.anti-captcha.com/26/41f/c23/7c50ff19.jpg?random=" + randInt);
+        String assignment = "Enter the licence plate number";
 
         JSONArray formJson = new JSONArray();
         formJson.put(0, new JSONObject());
@@ -220,11 +224,10 @@ class AntiCaptchaTaskTest {
                 "Gray color"
         );
 
-        int randInt = ThreadLocalRandom.current().nextInt(0, 10000);
-        String imageUrl = "https://files.anti-captcha.com/26/41f/c23/7c50ff19.jpg?random=" + randInt;
-        String assignment = "Enter the licence plate number";
-
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveCustomCaptcha(assignment, imageUrl, formJson);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.customCaptcha(imageUrl)
+                .setAssignment(assignment)
+                .setForms(formJson)
+                .getTaskSolution();
 
         Assertions.assertEquals(expectedLicensePlate, solution.getAnswers().get("license_plate"));
     }
