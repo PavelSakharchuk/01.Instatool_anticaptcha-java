@@ -32,9 +32,10 @@ class AntiCaptchaTaskTest {
         File captchaImageFile = FileHelper.getFileFromResource("captcha.jpg");
         String expectedCaptchaResult = "abournes";
 
-        String captcha = AnticaptchaTask.solveImageToText(captchaImageFile);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.imageToTextBuilder(captchaImageFile)
+                .getTaskSolution();
 
-        Assertions.assertEquals(expectedCaptchaResult, captcha);
+        Assertions.assertEquals(expectedCaptchaResult, solution.getText());
     }
 
     @Test
@@ -43,7 +44,8 @@ class AntiCaptchaTaskTest {
         String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
         Proxy proxy = new Proxy();
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveNoCaptcha(websiteUrl, websiteKey, proxy);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.noCaptcha(websiteUrl, websiteKey, proxy)
+                .getTaskSolution();
 
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
     }
@@ -53,7 +55,8 @@ class AntiCaptchaTaskTest {
         URL websiteUrl = new URL("http://http.myjino.ru/recaptcha/test-get.php");
         String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveNoCaptchaProxyless(websiteUrl, websiteKey);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.noCaptchaProxyless(websiteUrl, websiteKey)
+                .getTaskSolution();
 
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
     }
@@ -62,21 +65,33 @@ class AntiCaptchaTaskTest {
     void recaptchaV3ProxylessTest() throws InterruptedException, MalformedURLException {
         URL websiteUrl = new URL("http://http.myjino.ru/recaptcha/test-get.php");
         String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
-        String pageAction = "testPageAction";
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveRecaptchaV3Proxyless(websiteUrl, websiteKey, pageAction);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.recaptchaV3Proxyless(websiteUrl, websiteKey)
+                .getTaskSolution();
 
         Assertions.assertNotNull(solution);
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
     }
 
     @Test
-    void funcaptchaTest() throws InterruptedException, MalformedURLException {
+    void funCaptchaTest() throws InterruptedException, MalformedURLException {
         URL websiteUrl = new URL("http://http.myjino.ru/funcaptcha_test/");
-        String websiteKey = "DE0B0BB7-1EE4-4D70-1853-31B835D4506B";
+        String websitePublicKey = "DE0B0BB7-1EE4-4D70-1853-31B835D4506B";
         Proxy proxy = new Proxy();
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveFuncaptcha(websiteUrl, websiteKey, proxy);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.funCaptcha(websiteUrl, websitePublicKey, proxy)
+                .getTaskSolution();
+
+        Assertions.assertNotNull(solution.getGRecaptchaResponse());
+    }
+
+    @Test
+    void funCaptchaProxylessTest() throws InterruptedException, MalformedURLException {
+        URL websiteUrl = new URL("http://http.myjino.ru/funcaptcha_test/");
+        String websitePublicKey = "DE0B0BB7-1EE4-4D70-1853-31B835D4506B";
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.funCaptchaProxyless(websiteUrl, websitePublicKey)
+                .getTaskSolution();
 
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
     }
@@ -85,12 +100,15 @@ class AntiCaptchaTaskTest {
     void squareNetTest() throws InterruptedException, URISyntaxException {
         File squareFile = FileHelper.getFileFromResource("square.jpg");
         String objectName = "FISH / РЫБА";
-        int columns = 4;
         int rows = 4;
+        int columns = 4;
 
         List<Integer> expectedCaptchaResult = Arrays.asList(2);
 
-        List<Integer> answerList = AnticaptchaTask.solveSquareNet(squareFile, objectName, columns, rows);
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.squareNet(squareFile, objectName, rows, columns)
+                .getTaskSolution();
+        List<Integer> answerList = solution.getCellNumbers();
 
         Assertions.assertTrue(answerList.containsAll(expectedCaptchaResult)
                         && answerList.size() == expectedCaptchaResult.size(),
@@ -98,12 +116,42 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
+    void geeTestTest() throws InterruptedException, MalformedURLException {
+        URL websiteUrl = new URL("https://auth.geetest.com/");
+        String websiteKey = "b6e21f90a91a3c2d4a31fe84e10d0442";
+        // "challenge" for testing you can get here: https://www.binance.com/security/getGtCode.html?t=1561554068768
+        // you need to get a new "challenge" each time
+        String websiteChallenge = "cd0b3b5c33fb951ab364d9e13ccd7bf8";
+        Proxy proxy = new Proxy();
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.geeTest(websiteUrl, websiteKey, websiteChallenge, proxy)
+                .getTaskSolution();
+
+        Assertions.assertNotNull(solution.getGRecaptchaResponse());
+    }
+
+    @Test
     void geeTestProxylessTest() throws InterruptedException, MalformedURLException {
         URL websiteUrl = new URL("https://auth.geetest.com/");
         String websiteKey = "b6e21f90a91a3c2d4a31fe84e10d0442";
+        // "challenge" for testing you can get here: https://www.binance.com/security/getGtCode.html?t=1561554068768
+        // you need to get a new "challenge" each time
         String websiteChallenge = "cd0b3b5c33fb951ab364d9e13ccd7bf8";
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveGeeTestProxyless(websiteUrl, websiteKey, websiteChallenge);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.geeTestProxyless(websiteUrl, websiteKey, websiteChallenge)
+                .getTaskSolution();
+
+        Assertions.assertNotNull(solution.getGRecaptchaResponse());
+    }
+
+    @Test
+    void hCaptchaTest() throws InterruptedException, MalformedURLException {
+        URL websiteUrl = new URL("http://democaptcha.com/");
+        String websiteKey = "51829642-2cda-4b09-896c-594f89d700cc";
+        Proxy proxy = new Proxy();
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.hCaptcha(websiteUrl, websiteKey, proxy)
+                .getTaskSolution();
 
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
     }
@@ -113,14 +161,19 @@ class AntiCaptchaTaskTest {
         URL websiteUrl = new URL("http://democaptcha.com/");
         String websiteKey = "51829642-2cda-4b09-896c-594f89d700cc";
 
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveHCaptchaProxyless(websiteUrl, websiteKey);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.hCaptchaProxyless(websiteUrl, websiteKey)
+                .getTaskSolution();
 
         Assertions.assertNotNull(solution.getGRecaptchaResponse());
     }
 
     @Test
-    void customCaptchaTest() throws InterruptedException {
+    void customCaptchaTest() throws InterruptedException, MalformedURLException {
         String expectedLicensePlate = "TONFNTI";
+
+        int randInt = ThreadLocalRandom.current().nextInt(0, 10000);
+        URL imageUrl = new URL("https://files.anti-captcha.com/26/41f/c23/7c50ff19.jpg?random=" + randInt);
+        String assignment = "Enter the licence plate number";
 
         JSONArray formJson = new JSONArray();
         formJson.put(0, new JSONObject());
@@ -171,11 +224,10 @@ class AntiCaptchaTaskTest {
                 "Gray color"
         );
 
-        int randInt = ThreadLocalRandom.current().nextInt(0, 10000);
-        String imageUrl = "https://files.anti-captcha.com/26/41f/c23/7c50ff19.jpg?random=" + randInt;
-        String assignment = "Enter the licence plate number";
-
-        TaskResultResponse.SolutionData solution = AnticaptchaTask.solveCustomCaptcha(assignment, imageUrl, formJson);
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.customCaptcha(imageUrl)
+                .setAssignment(assignment)
+                .setForms(formJson)
+                .getTaskSolution();
 
         Assertions.assertEquals(expectedLicensePlate, solution.getAnswers().get("license_plate"));
     }

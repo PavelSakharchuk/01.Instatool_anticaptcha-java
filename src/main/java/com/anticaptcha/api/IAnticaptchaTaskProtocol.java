@@ -6,5 +6,6 @@ import org.json.JSONObject;
 public interface IAnticaptchaTaskProtocol {
     JSONObject getPostData();
 
-    TaskResultResponse.SolutionData getTaskSolution();
+    // TODO: 20.10.2020: p.sakharchuk: Need to add catching Exception
+    TaskResultResponse.SolutionData getTaskSolution() throws InterruptedException;
 }

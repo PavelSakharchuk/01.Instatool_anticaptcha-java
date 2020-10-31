@@ -1,6 +1,6 @@
 package com.anticaptcha.http;
 
-import com.anticaptcha.api.NoCaptcha;
+import com.anticaptcha.api.task.NoCaptcha;
 
 public class Proxy {
     private NoCaptcha.ProxyTypeOption proxyType;
