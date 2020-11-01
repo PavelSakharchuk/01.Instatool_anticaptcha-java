@@ -1,6 +1,6 @@
 package com.anticaptcha.api.task;
 
-import com.anticaptcha.api.AnticaptchaAbstract;
+import com.anticaptcha.api.CreateTaskAbstract;
 import com.anticaptcha.api.TaskType;
 import com.anticaptcha.helper.DebugHelper;
 import lombok.Setter;
@@ -27,7 +27,7 @@ import java.net.URL;
  */
 @Setter
 @Accessors(chain = true)
-public class CustomCaptcha extends AnticaptchaAbstract {
+public class CustomCaptcha extends CreateTaskAbstract {
     /**
      * Defines type of the task.
      */

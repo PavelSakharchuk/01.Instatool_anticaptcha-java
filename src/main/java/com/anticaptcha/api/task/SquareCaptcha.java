@@ -1,6 +1,6 @@
 package com.anticaptcha.api.task;
 
-import com.anticaptcha.api.AnticaptchaAbstract;
+import com.anticaptcha.api.CreateTaskAbstract;
 import com.anticaptcha.api.TaskType;
 import com.anticaptcha.helper.DebugHelper;
 import com.anticaptcha.helper.StringHelper;
@@ -21,7 +21,7 @@ import java.io.File;
  */
 @Setter
 @Accessors(chain = true)
-public class SquareCaptcha extends AnticaptchaAbstract {
+public class SquareCaptcha extends CreateTaskAbstract {
     /**
      * Defines type of the task.
      */

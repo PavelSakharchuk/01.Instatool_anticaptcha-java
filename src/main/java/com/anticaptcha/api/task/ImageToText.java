@@ -1,6 +1,6 @@
 package com.anticaptcha.api.task;
 
-import com.anticaptcha.api.AnticaptchaAbstract;
+import com.anticaptcha.api.CreateTaskAbstract;
 import com.anticaptcha.api.TaskType;
 import com.anticaptcha.helper.DebugHelper;
 import com.anticaptcha.helper.StringHelper;
@@ -19,7 +19,7 @@ import java.net.URL;
  */
 @Setter
 @Accessors(chain = true)
-public class ImageToText extends AnticaptchaAbstract {
+public class ImageToText extends CreateTaskAbstract {
     /**
      * Defines type of the task.
      */
