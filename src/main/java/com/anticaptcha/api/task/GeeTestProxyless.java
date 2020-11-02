@@ -1,6 +1,6 @@
 package com.anticaptcha.api.task;
 
-import com.anticaptcha.api.AnticaptchaAbstract;
+import com.anticaptcha.api.CreateTaskAbstract;
 import com.anticaptcha.api.TaskType;
 import com.anticaptcha.helper.DebugHelper;
 import lombok.Setter;
@@ -20,7 +20,7 @@ import java.net.URL;
  */
 @Setter
 @Accessors(chain = true)
-public class GeeTestProxyless extends AnticaptchaAbstract {
+public class GeeTestProxyless extends CreateTaskAbstract {
     /**
      * Defines type of the task.
      */

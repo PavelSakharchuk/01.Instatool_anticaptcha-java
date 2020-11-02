@@ -1,6 +1,6 @@
 package com.anticaptcha.api.task;
 
-import com.anticaptcha.api.AnticaptchaAbstract;
+import com.anticaptcha.api.CreateTaskAbstract;
 import com.anticaptcha.api.TaskType;
 import com.anticaptcha.helper.DebugHelper;
 import lombok.Setter;
@@ -21,7 +21,7 @@ import java.util.Arrays;
  */
 @Setter
 @Accessors(chain = true)
-public class RecaptchaV3Proxyless extends AnticaptchaAbstract {
+public class RecaptchaV3Proxyless extends CreateTaskAbstract {
     /**
      * Defines type of the task.
      */
