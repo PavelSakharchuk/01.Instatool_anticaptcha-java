@@ -34,4 +34,23 @@ class AntiCaptchaFullTaskTest {
 
         Assertions.assertEquals(expectedCaptchaResult, solution.getText());
     }
+
+    @Test
+    void imageToTextFullTest() throws InterruptedException, URISyntaxException, MalformedURLException {
+        File captchaImageFile = FileHelper.getFileFromResource("captcha.jpg");
+        String expectedCaptchaResult = "abournes";
+
+        TaskResultResponse.SolutionData solution = AnticaptchaTask.imageToTextBuilder(captchaImageFile)
+                .setPhrase(true)
+                .setCase_(true)
+                .setNumeric(2)
+                .setMath(false)
+                .setMinLength(8)
+                .setMaxLength(8)
+                .setComment("Captcha")
+                .setWebsiteURL(new URL("https://test.lib"))
+                .getTaskSolution();
+
+        Assertions.assertEquals(expectedCaptchaResult, solution.getText());
+    }
 }
