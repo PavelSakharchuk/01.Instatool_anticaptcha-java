@@ -88,6 +88,11 @@ public class ImageToText extends CreateTaskAbstract {
     }
 
 
+    public ImageToText setWebsiteURL(URL websiteURL) {
+        this.websiteURL = websiteURL.toString();
+        return this;
+    }
+
     @Override
     public JSONObject getPostData() {
         JSONObject postData = new JSONObject();
@@ -112,10 +117,6 @@ public class ImageToText extends CreateTaskAbstract {
             return null;
         }
         return postData;
-    }
-
-    public void setWebsiteURL(URL websiteURL) {
-        this.websiteURL = websiteURL.toString();
     }
 
 
