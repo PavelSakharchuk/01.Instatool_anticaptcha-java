@@ -3,9 +3,12 @@ package com.anticaptcha.api;
 import com.anticaptcha.apiresponse.CreateTaskResponse;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -17,11 +20,9 @@ import java.util.concurrent.TimeUnit;
  *
  * @see <a href="https://anticaptcha.atlassian.net/wiki/spaces/API/pages/5079073/createTask+captcha+task+creating">https://developer.aliyun.com</a>
  */
+@Setter
+@Accessors(chain = true)
 public abstract class CreateTaskAbstract extends AnticaptchaAbstract {
-    /**
-     * Task ID for future use in getTask method.
-     */
-    private Integer taskId;
     /**
      * Task data. See list of available object descriptions here.
      */
@@ -44,10 +45,20 @@ public abstract class CreateTaskAbstract extends AnticaptchaAbstract {
      * Task ID for future use in getTask method.
      */
     private String callbackUrl;
+    /**
+     * Task ID for future use in getTask method.
+     */
+    private Integer taskId;
 
 
-    public void setLanguagePool(LanguagePool languagePool) {
-        this.languagePool = languagePool.toString();
+    public CreateTaskAbstract setLanguagePool(LanguagePool languagePool) {
+        this.languagePool = languagePool.toString().toLowerCase();
+        return this;
+    }
+
+    public CreateTaskAbstract setCallbackUrl(URL callbackUrl) {
+        this.callbackUrl = callbackUrl.toString();
+        return this;
     }
 
     @SuppressWarnings("WeakerAccess")
