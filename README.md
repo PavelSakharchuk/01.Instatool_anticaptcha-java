@@ -1,6 +1,6 @@
 AntiCaptcha lib
 ======================
-AntiCaptcha — automatic captcha solver.
+AntiCaptcha — automatic captcha solver.  
 API version 2 works on address https://api.anti-captcha.com/ and it works only via HTTP POST methods, data format is JSON.
 
 
