@@ -28,7 +28,7 @@ class AntiCaptchaTaskTest {
 
 
     @Test
-    void imageToTextTest() throws InterruptedException, URISyntaxException {
+    void imageToTextTest() throws URISyntaxException {
         File captchaImageFile = FileHelper.getFileFromResource("captcha.jpg");
         String expectedCaptchaResult = "abournes";
 
@@ -39,7 +39,7 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void noCaptchaTest() throws InterruptedException, MalformedURLException {
+    void noCaptchaTest() throws MalformedURLException {
         URL websiteUrl = new URL("http://http.myjino.ru/recaptcha/test-get.php");
         String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
         Proxy proxy = new Proxy();
@@ -51,7 +51,7 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void noCaptchaProxylessTest() throws InterruptedException, MalformedURLException {
+    void noCaptchaProxylessTest() throws MalformedURLException {
         URL websiteUrl = new URL("http://http.myjino.ru/recaptcha/test-get.php");
         String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
 
@@ -62,7 +62,7 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void recaptchaV3ProxylessTest() throws InterruptedException, MalformedURLException {
+    void recaptchaV3ProxylessTest() throws MalformedURLException {
         URL websiteUrl = new URL("http://http.myjino.ru/recaptcha/test-get.php");
         String websiteKey = "6Lc_aCMTAAAAABx7u2W0WPXnVbI_v6ZdbM6rYf16";
 
@@ -74,7 +74,7 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void funCaptchaTest() throws InterruptedException, MalformedURLException {
+    void funCaptchaTest() throws MalformedURLException {
         URL websiteUrl = new URL("http://http.myjino.ru/funcaptcha_test/");
         String websitePublicKey = "DE0B0BB7-1EE4-4D70-1853-31B835D4506B";
         Proxy proxy = new Proxy();
@@ -86,7 +86,7 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void funCaptchaProxylessTest() throws InterruptedException, MalformedURLException {
+    void funCaptchaProxylessTest() throws MalformedURLException {
         URL websiteUrl = new URL("http://http.myjino.ru/funcaptcha_test/");
         String websitePublicKey = "DE0B0BB7-1EE4-4D70-1853-31B835D4506B";
 
@@ -97,7 +97,7 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void squareNetTest() throws InterruptedException, URISyntaxException {
+    void squareNetTest() throws URISyntaxException {
         File squareFile = FileHelper.getFileFromResource("square.jpg");
         String objectName = "FISH / РЫБА";
         int rows = 4;
@@ -116,7 +116,7 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void geeTestTest() throws InterruptedException, MalformedURLException {
+    void geeTestTest() throws MalformedURLException {
         URL websiteUrl = new URL("https://auth.geetest.com/");
         String websiteKey = "b6e21f90a91a3c2d4a31fe84e10d0442";
         // "challenge" for testing you can get here: https://www.binance.com/security/getGtCode.html?t=1561554068768
@@ -131,7 +131,7 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void geeTestProxylessTest() throws InterruptedException, MalformedURLException {
+    void geeTestProxylessTest() throws MalformedURLException {
         URL websiteUrl = new URL("https://auth.geetest.com/");
         String websiteKey = "b6e21f90a91a3c2d4a31fe84e10d0442";
         // "challenge" for testing you can get here: https://www.binance.com/security/getGtCode.html?t=1561554068768
@@ -145,7 +145,7 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void hCaptchaTest() throws InterruptedException, MalformedURLException {
+    void hCaptchaTest() throws MalformedURLException {
         URL websiteUrl = new URL("http://democaptcha.com/");
         String websiteKey = "51829642-2cda-4b09-896c-594f89d700cc";
         Proxy proxy = new Proxy();
@@ -157,7 +157,7 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void hCaptchaProxylessTest() throws InterruptedException, MalformedURLException {
+    void hCaptchaProxylessTest() throws MalformedURLException {
         URL websiteUrl = new URL("http://democaptcha.com/");
         String websiteKey = "51829642-2cda-4b09-896c-594f89d700cc";
 
@@ -168,7 +168,7 @@ class AntiCaptchaTaskTest {
     }
 
     @Test
-    void customCaptchaTest() throws InterruptedException, MalformedURLException {
+    void customCaptchaTest() throws MalformedURLException {
         String expectedLicensePlate = "TONFNTI";
 
         int randInt = ThreadLocalRandom.current().nextInt(0, 10000);
