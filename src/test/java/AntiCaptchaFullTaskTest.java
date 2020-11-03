@@ -22,7 +22,7 @@ class AntiCaptchaFullTaskTest {
     }
 
     @Test
-    void imageToTextFullCreateTaskTest() throws InterruptedException, URISyntaxException, MalformedURLException {
+    void imageToTextFullCreateTaskTest() throws URISyntaxException, MalformedURLException {
         File captchaImageFile = FileHelper.getFileFromResource("captcha.jpg");
         String expectedCaptchaResult = "abournes";
 
@@ -36,7 +36,7 @@ class AntiCaptchaFullTaskTest {
     }
 
     @Test
-    void imageToTextFullTest() throws InterruptedException, URISyntaxException, MalformedURLException {
+    void imageToTextFullTest() throws URISyntaxException, MalformedURLException {
         File captchaImageFile = FileHelper.getFileFromResource("captcha.jpg");
         String expectedCaptchaResult = "abournes";
 

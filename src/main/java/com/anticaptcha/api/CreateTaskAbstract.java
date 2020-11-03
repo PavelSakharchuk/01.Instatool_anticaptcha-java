@@ -4,6 +4,7 @@ import com.anticaptcha.apiresponse.CreateTaskResponse;
 import com.anticaptcha.apiresponse.TaskResultResponse;
 import com.anticaptcha.helper.DebugHelper;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -122,7 +123,8 @@ public abstract class CreateTaskAbstract extends AnticaptchaAbstract {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public Boolean waitForResult(Integer maxSeconds, Integer currentSecond) throws InterruptedException {
+    @SneakyThrows
+    public Boolean waitForResult(Integer maxSeconds, Integer currentSecond) {
         if (currentSecond >= maxSeconds) {
             DebugHelper.out("Time's out.", DebugHelper.Type.ERROR);
             return false;
@@ -191,15 +193,15 @@ public abstract class CreateTaskAbstract extends AnticaptchaAbstract {
     }
 
     @SuppressWarnings("WeakerAccess")
-    private Boolean waitForResult() throws InterruptedException {
+    private Boolean waitForResult() {
         return waitForResult(120, 0);
     }
 
-    private Boolean waitForResult(Integer maxSeconds) throws InterruptedException {
+    private Boolean waitForResult(Integer maxSeconds) {
         return waitForResult(maxSeconds, 0);
     }
 
-    public TaskResultResponse.SolutionData getTaskSolution() throws InterruptedException {
+    public TaskResultResponse.SolutionData getTaskSolution() {
         if (!this.createTask()) {
             DebugHelper.out(
                     "API v2 send failed. " + this.getErrorMessage(),
