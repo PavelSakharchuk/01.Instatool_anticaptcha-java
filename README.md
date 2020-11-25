@@ -9,7 +9,7 @@ This is reworked fork of original lib:
 https://github.com/AdminAnticaptcha/anticaptcha-java.
 
 
-### How to use development version of Instagram Java scraper ###
+### How to use development version of Anticaptcha Java scraper ###
 Read more info on [jitpack page of project](https://jitpack.io/#com.github.PavelSakharchuk/anticaptcha-java).  
 Open "Commit" tab and select revision by commit hash.  
 Just open Gradle or Maven tab copy artifact info and  
